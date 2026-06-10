@@ -30,7 +30,8 @@
     "db:seed": "node src/db/seed.js",
     "db:reset": "node src/db/reset.js",
     "audit:fix": "npm audit fix",
-    "validate": "npm run lint && npm run test:coverage && npm run build"
+    "validate": "npm run lint && npm run test:coverage && npm run build",
+    "cline": "node_modules/@cline/cli-linux-x64/bin/cline"
   },
   "dependencies": {
     "dotenv": "^16.4.0",
@@ -45,6 +46,7 @@
     "@playwright/test": "^1.44.0",
     "@vitest/coverage-v8": "^4.1.8",
     "@vitest/ui": "^4.1.8",
+    "cline": "^3.0.23",
     "commitizen": "^4.2.4",
     "cz-conventional-changelog": "^3.3.0",
     "eslint": "^8.57.0",
