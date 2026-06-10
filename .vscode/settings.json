@@ -8,10 +8,11 @@
   },
   "editor.tabSize": 2,
   "editor.insertSpaces": true,
-  "editor.rulers": [100],
+  "editor.rulers": [
+    100
+  ],
   "editor.bracketPairColorization.enabled": true,
   "editor.guides.bracketPairs": "active",
-
   // ── Language-specific formatters ────────────────────────────
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
@@ -26,17 +27,17 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.wordWrap": "on"
   },
-
   // ── ESLint ──────────────────────────────────────────────────
-  "eslint.validate": ["javascript", "typescript"],
+  "eslint.validate": [
+    "javascript",
+    "typescript"
+  ],
   "eslint.run": "onSave",
-
   // ── Git ─────────────────────────────────────────────────────
   "git.autofetch": true,
   "git.confirmSync": false,
   "git.enableSmartCommit": false,
   "gitlens.currentLine.enabled": true,
-
   // ── Files ───────────────────────────────────────────────────
   "files.eol": "\n",
   "files.trimTrailingWhitespace": true,
@@ -47,11 +48,9 @@
     "**/coverage": true,
     "**/.nyc_output": true
   },
-
   // ── Testing ─────────────────────────────────────────────────
   "vitest.enable": true,
   "vitest.commandLine": "npx vitest",
-
   // ── TODO Highlight ──────────────────────────────────────────
   "todohighlight.keywords": [
     {
@@ -77,15 +76,29 @@
     "icon": "alert",
     "type": "text"
   },
-
   // ── Error Lens ──────────────────────────────────────────────
-  "errorLens.enabledDiagnosticLevels": ["error", "warning"],
+  "errorLens.enabledDiagnosticLevels": [
+    "error",
+    "warning"
+  ],
   "errorLens.delay": 500,
-
   // ── Spell check ─────────────────────────────────────────────
   "cSpell.words": [
-    "amortisation", "amortization", "calcify", "vitest", "eslint",
-    "clinerules", "jsdoc", "playwright", "supertest", "commitlint",
-    "husky", "gitleaks", "codecov", "conventionalcommits"
-  ]
+    "amortisation",
+    "amortization",
+    "calcify",
+    "vitest",
+    "eslint",
+    "clinerules",
+    "jsdoc",
+    "playwright",
+    "supertest",
+    "commitlint",
+    "husky",
+    "gitleaks",
+    "codecov",
+    "conventionalcommits"
+  ],
+  "snyk.advanced.organization": "1c11a714-c5f3-441c-abb3-8edcacdb1f05",
+  "snyk.advanced.autoSelectOrganization": true
 }
