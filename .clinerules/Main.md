@@ -62,18 +62,67 @@ test(mortgage): add edge cases for zero down payment
 chore(deps): upgrade eslint to v9
 ```
 
-### Branch strategy (GitHub Flow):
-- `main` — always deployable, protected, requires PR + passing CI
-- `dev` — integration branch for feature merges
-- Feature branches: `feat/<short-name>` (e.g., `feat/bmi-calculator`)
-- Bug fixes: `fix/<short-name>`
-- Releases: `release/v<semver>`
+### Branch strategy (Git Flow — strict):
+
+```
+main   ← production only. Never worked on directly. Receives merges from dev via PR.
+  │
+  └── dev   ← integration branch. Never worked on directly. Receives feature branches via PR.
+        │
+        ├── feat/<short-name>     ← new feature  (branch from dev, merge back to dev)
+        ├── fix/<short-name>      ← bug fix       (branch from dev, merge back to dev)
+        ├── docs/<short-name>     ← docs only     (branch from dev, merge back to dev)
+        ├── refactor/<short-name> ← restructure   (branch from dev, merge back to dev)
+        ├── test/<short-name>     ← tests only    (branch from dev, merge back to dev)
+        └── chore/<short-name>    ← tooling/deps  (branch from dev, merge back to dev)
+```
+
+**The rule in one sentence: every piece of work lives on its own branch,
+branched from `dev`, and returns to `dev` via a PR.
+`main` only ever receives from `dev`.**
 
 ### Rules Cline must follow for Git:
-- Never suggest force-pushing to `main` or `dev`
-- Always create feature work on a new branch
-- Include a `.gitignore` in every new project (see §2a)
-- Add `.gitattributes` for line ending normalisation
+
+1. **When any new feature, fix, or task is started** — the very first action,
+   before touching any file, is to create and switch to a branch from `dev`:
+   ```bash
+   git checkout dev
+   git pull origin dev
+   git checkout -b feat/<short-name>
+   ```
+   Cline must state: "Created branch `feat/<short-name>` from `dev`. Starting work."
+
+2. **All commits happen on that branch.** No commits directly to `dev` or `main`. Ever.
+
+3. **When the task is complete**, Cline outputs this exact closing message:
+   ```
+   ✅ Task complete on branch feat/<short-name>.
+
+   To integrate:
+     git push origin feat/<short-name>
+
+   Then open a Pull Request:  feat/<short-name>  →  dev
+   CI must pass before merging.
+   ```
+
+4. **Never suggest merging directly** — always via PR, even when working solo.
+
+5. **Branch naming — use these prefixes only:**
+   | Prefix | When to use |
+   |---|---|
+   | `feat/` | New functionality |
+   | `fix/` | Bug fix |
+   | `docs/` | Documentation only, no logic change |
+   | `refactor/` | Code restructure, no behaviour change |
+   | `test/` | Adding or fixing tests only |
+   | `chore/` | Dependencies, config, tooling |
+   Use kebab-case, keep it short: `feat/bmi-calculator` not `feat/add-the-new-bmi-calculator-page`
+
+6. **Never suggest `--force` on any git command targeting `main` or `dev`.**
+
+7. **Include a `.gitignore` in every new project (see §2a).**
+
+8. **Add `.gitattributes` for line ending normalisation.**
 
 ### §2a — Mandatory .gitignore entries:
 ```
@@ -378,25 +427,73 @@ project-root/
 
 ## 9. CLINE TASK WORKFLOW
 
-When Cline starts any task, it must follow this sequence:
+Every task follows this exact sequence — no steps skipped, no reordering.
 
 ```
-1. READ   → Understand the task fully. Ask one clarifying question if genuinely ambiguous.
-2. PLAN   → State: "I will create/modify these files: [list]"
-3. CHECK  → Does any file already exist? Read it before touching it.
-4. CODE   → Write the implementation
-5. TEST   → Write or update the tests
-6. DOCS   → Add/update JSDoc, README section, or CHANGELOG entry
-7. LINT   → Mentally verify: no secrets, no console.log, correct naming
-8. REPORT → Summarise what was done and what the developer should verify manually
+0. BRANCH  → Create a branch from dev before touching anything
+1. READ    → Understand the task fully. Ask one clarifying question if genuinely ambiguous.
+2. PLAN    → State: "I will create/modify these files: [list]"
+3. CHECK   → Does any file already exist? Read it before touching it.
+4. CODE    → Write the implementation
+5. TEST    → Write or update the tests
+6. DOCS    → Add/update JSDoc, README section, or CHANGELOG entry
+7. LINT    → Mentally verify: no secrets, no console.log, correct naming
+8. REPORT  → Output the closing PR message (see §2, rule 3)
 ```
 
-Cline must NEVER skip steps 5, 6, or 7.
+### Step 0 in detail — BRANCH (mandatory, always first):
+
+Before writing a single line of code, Cline runs:
+```bash
+git checkout dev
+git pull origin dev
+git checkout -b <type>/<short-name>
+```
+
+And announces:
+```
+🌿 Branch created: feat/<short-name> (from dev)
+Starting task: [task description]
+```
+
+If Cline is already on the correct feature branch (resuming work), it states that
+instead and skips creation. It never silently assumes it's on the right branch.
+
+### Step 8 in detail — REPORT (mandatory, always last):
+
+```
+✅ Task complete.
+
+Branch:  feat/<short-name>
+Files changed:
+  - src/calculators/mortgage.js       (created)
+  - src/calculators/mortgage.test.js  (created)
+  - index.html                        (updated — added link to mortgage calculator)
+  - CHANGELOG.md                      (updated — [Unreleased] section)
+
+Tests: 6 written, 6 passing
+Coverage: lines 94% | functions 100% | branches 88%
+
+To integrate:
+  git push origin feat/<short-name>
+  Open PR: feat/<short-name> → dev
+  CI must pass before merging.
+
+Verify manually:
+  - [ ] Calculator renders correctly in browser
+  - [ ] AdSense slots appear in correct positions
+  - [ ] Page passes Lighthouse accessibility check
+```
+
+Cline must NEVER skip steps 0, 5, 6, 7, or 8.
 
 ---
 
 ## 10. WHAT CLINE MUST NEVER DO
 
+- Start any task without first creating a branch from `dev` (step 0)
+- Commit directly to `main` or `dev`
+- Suggest merging a branch without opening a PR
 - Hardcode any secret, credential, or API key
 - Create a `.env` without first adding it to `.gitignore`
 - Write a function without a JSDoc comment

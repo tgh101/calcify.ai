@@ -3,210 +3,263 @@
 
 ---
 
-## What this is
+## Account & repo requirements
 
-A complete, production-grade development environment configuration for a Cline-powered
-project. Drop these files into any project and you get the same engineering rigour as a
-team of five seniors — automated, enforced, and documented.
+| Requirement | Status |
+|---|---|
+| GitHub account | Free ✅ |
+| Repo visibility | **Public** — unlocks unlimited Actions minutes, CodeQL, branch protection |
+| Cloudflare Pages | Free tier — unlimited requests, 500 builds/month |
+| Codecov | Free for public repos |
+
+> Everything in this environment works on a free GitHub account with a public repo.
+> No paid plan is needed anywhere.
 
 ---
 
-## Files in this package
+## What's in this package
 
 ```
-.clinerules                          ← Master Cline instruction file (start here)
+.clinerules                          ← Master Cline instruction file
 .clinerules.d/
-  secrets.md                         ← Detailed secrets & env var rules
-  testing.md                         ← Testing standards, patterns, configs
+  secrets.md                         ← Secrets & env var rules + templates
+  testing.md                         ← Vitest + Playwright config & patterns
   documentation.md                   ← JSDoc, README, CHANGELOG, ADR templates
 .cline/
-  mcp.json                           ← MCP tool servers for Cline
+  mcp.json                           ← 9 MCP tool servers for Cline
 .github/
   workflows/
-    ci.yml                           ← Lint + test + coverage on every PR
-    release.yml                      ← Auto-versioning + deploy on merge to main
-    security.yml                     ← Weekly secret scan + CodeQL analysis
-  PULL_REQUEST_TEMPLATE.md           ← Structured PR checklist
-  CODEOWNERS                         ← Auto-assign reviewers to sensitive paths
+    ci.yml                           ← Lint → Test (Node 18/20/22) → E2E → Audit → Build
+    release.yml                      ← Auto-version → Deploy → Smoke test
+    security.yml                     ← Weekly: npm audit + Gitleaks + CodeQL
+  PULL_REQUEST_TEMPLATE.md
+  CODEOWNERS
 .vscode/
-  extensions.json                    ← Recommended VS Code extensions
-  settings.json                      ← Auto-format, ESLint, Todo highlight
-.eslintrc.json                       ← ESLint with JSDoc enforcement
-.prettierrc                          ← Prettier (100 char width, single quotes)
-.gitleaks.toml                       ← Secret scanning rules
-commitlint.config.js                 ← Enforce Conventional Commits
-package.json                         ← All scripts + dev dependencies
+  extensions.json                    ← 20 recommended extensions
+  settings.json                      ← Format-on-save, ESLint, inline errors
+.eslintrc.json
+.prettierrc
+.gitleaks.toml
+commitlint.config.js
+package.json
 docs/
-  adr/
-    ADR-001-vanilla-js.md            ← Example Architecture Decision Record
+  adr/ADR-001-vanilla-js.md
 ```
 
 ---
 
-## Quick install (new project)
+## Quick install
 
 ```bash
-# 1. Copy all files to your project root
+# 1. Copy files to your project root
 cp -r cline-pro-env/. your-project/
 
-# 2. Install dev tooling
+# 2. Install dev tooling and activate git hooks
 npm install
-
-# 3. Set up git hooks (runs lint + commit message validation)
 npm run prepare
 
-# 4. Set up your environment
+# 3. Set up secrets
 cp .env.example .env
-# Edit .env with your real values
+# Edit .env with real values — already in .gitignore
 
-# 5. Verify everything works
+# 4. Verify everything works
 npm run validate
-# Runs: lint → test:coverage → build
 ```
 
 ---
 
-## Tool-by-tool breakdown
+## GitHub setup (one-time, ~10 minutes)
 
-### Cline Rules (`.clinerules` + `.clinerules.d/`)
+### 1. Create the repo as Public
 
-| File | What it enforces |
-|---|---|
-| `.clinerules` | Master rules: secrets, git, clean code, testing, docs, workflow |
-| `secrets.md` | `.env.example` template, startup validation, security headers |
-| `testing.md` | Vitest config, Playwright config, test patterns per layer |
-| `documentation.md` | JSDoc templates, README/CHANGELOG/ADR formats |
+On github.com → New repository → **Public**.
 
-### MCP Servers (`.cline/mcp.json`)
+### 2. Push your initial commit
 
-| Server | Purpose |
-|---|---|
-| `filesystem` | Read/write project files within working directory |
-| `github` | Create PRs, branches, issues without leaving Cline |
-| `git` | Status, diff, commit, log operations |
-| `memory` | Persist project decisions across Cline sessions |
-| `sequential-thinking` | Force multi-step reasoning on complex tasks |
-| `postgres` | Inspect DB schema (read-only in production) |
-| `brave-search` | Look up docs and error messages |
-| `puppeteer` | Visual validation of rendered output |
-
-**Setup:**
 ```bash
-# Set required env vars for MCP servers
-export GITHUB_TOKEN=ghp_your_token_here
-export BRAVE_API_KEY=your_brave_key_here
+git init
+git checkout -b main
+git add .
+git commit -m "chore: initialise project with production engineering environment"
+git remote add origin https://github.com/your-username/your-project.git
+git push -u origin main
+git checkout -b dev
+git push -u origin dev
+```
+
+### 3. Enable branch protection on `main` and `dev`
+
+Settings → Branches → Add branch protection rule.
+
+**For `main`:**
+- ✅ Require a pull request before merging
+- ✅ Required approving reviews: 1 (yourself — forces conscious decision to ship)
+- ✅ Require status checks: `Lint & Format`, `Unit Tests (Node 20)`, `Build`
+- ✅ Require branches to be up to date before merging
+- ✅ Do not allow bypassing the above settings
+- ✅ Restrict who can push: only you
+
+**For `dev`:**
+- ✅ Require a pull request before merging
+- ✅ Require status checks: `Lint & Format`, `Unit Tests (Node 20)`
+- ✅ Do not allow bypassing the above settings
+- ❌ No required reviewer — you can self-merge feature PRs into dev
+
+This means:
+- Feature branches → `dev` via PR (CI must pass, no reviewer required)
+- `dev` → `main` via PR (CI must pass + you explicitly approve)
+
+### 4. Set up the `production` environment
+
+Settings → Environments → New environment → name it `production`.
+
+Add a protection rule: **Required reviewers** → add yourself.
+This gives you a manual approval gate before every deploy — free on public repos.
+
+### 5. Add repository secrets
+
+Settings → Secrets and variables → Actions → New repository secret:
+
+| Secret | Where to get it |
+|---|---|
+| `CF_API_TOKEN` | Cloudflare → My Profile → API Tokens |
+| `CF_ACCOUNT_ID` | Cloudflare → right sidebar on any page |
+| `CF_ZONE_ID` | Cloudflare → your domain → Overview → right sidebar |
+| `CODECOV_TOKEN` | codecov.io → your repo → Settings |
+
+### 6. Add repository variables
+
+Settings → Secrets and variables → Actions → Variables tab:
+
+| Variable | Example value |
+|---|---|
+| `CF_PROJECT_NAME` | `my-calculator-site` |
+| `PROD_URL` | `https://my-calculator-site.pages.dev` |
+
+### 7. Install MCP servers
+
+In VS Code: Cline sidebar → MCP Servers → point to `.cline/mcp.json`
+
+Set these in your shell profile (`~/.zshrc` or `~/.bashrc`):
+```bash
+export GITHUB_TOKEN=ghp_xxxxxxxxxxxx
+export BRAVE_API_KEY=BSAxxxxxxxxxx
 export DATABASE_URL=postgresql://...
 ```
 
-### GitHub Actions
+---
 
-| Workflow | Trigger | What it does |
-|---|---|---|
-| `ci.yml` | Every push & PR | Lint → Unit tests (Node 18/20/22) → E2E → Security audit → Build |
-| `release.yml` | Merge to `main` | Auto-bump version → Generate CHANGELOG → Deploy → Smoke test |
-| `security.yml` | Weekly (Monday) | npm audit → Gitleaks full history → CodeQL SAST |
+## CI pipeline overview
 
-### VS Code Extensions (`.vscode/extensions.json`)
+Every push and PR runs this pipeline automatically:
 
-Install all at once:
-```bash
-cat .vscode/extensions.json | jq -r '.recommendations[]' | xargs -I {} code --install-extension {}
 ```
+Push / PR
+    │
+    ├─ Lint & Format (~2 min)
+    │   ├─ ESLint
+    │   ├─ Prettier check
+    │   └─ Gitleaks secret scan
+    │
+    ├─ Unit Tests × 3 Node versions (~6 min, parallel)
+    │   ├─ Node 18
+    │   ├─ Node 20 + Codecov upload
+    │   └─ Node 22
+    │
+    ├─ E2E Tests — Chromium + Firefox (~7 min)
+    │
+    ├─ npm Security Audit (~1 min)
+    │
+    └─ Build verification (~2 min)
 
-Key extensions:
-- **saoudrizwan.claude-dev** — Cline itself
-- **eamodio.gitlens** — Git history and blame on every line
-- **vitest.explorer** — Run tests from the sidebar
-- **snyk-security.snyk-vulnerability-scanner** — Inline CVE warnings
-- **usernamehw.errorlens** — Errors shown inline on the problematic line
-- **gruntfuggly.todo-tree** — All TODOs/FIXMEs in a sidebar panel
+Total: ~18 min | Cost: $0 (public repo = unlimited minutes)
+```
 
 ---
 
-## Branch & release flow
+## Git Flow — the complete picture
 
 ```
-feat/my-feature
-    │
-    ├─ Push → CI runs (lint + test + build)
-    │
-    └─ PR → Must pass CI + PR template checklist
-                │
-                └─ Merge to dev → integration
-                        │
-                        └─ Merge to main → release-please bumps version
-                                                → CHANGELOG generated
-                                                → GitHub Release created
-                                                → Deploy to production
-                                                → CDN purged
-                                                → Smoke test
+dev (integration)
+ │
+ ├── feat/mortgage-calculator
+ │       │
+ │       │  work, commits, tests
+ │       │
+ │       └──► PR: feat/mortgage-calculator → dev
+ │                   CI passes → merge → delete branch
+ │
+ ├── feat/bmi-calculator
+ │       │
+ │       └──► PR: feat/bmi-calculator → dev
+ │                   CI passes → merge → delete branch
+ │
+ └──► PR: dev → main  (when ready to release)
+             CI passes → you approve deploy in GitHub Environments UI
+             → release-please bumps version + generates CHANGELOG
+             → Cloudflare Pages deploy
+             → CDN cache purge
+             → Smoke test ✅
 ```
+
+**The pattern for every piece of work:**
+1. `git checkout dev && git pull origin dev`
+2. `git checkout -b feat/<name>`
+3. Do the work
+4. `git push origin feat/<name>`
+5. Open PR → `dev`
+6. CI passes → merge → delete branch
+
+**Promoting to production:**
+1. Open PR → `main` from `dev`
+2. CI passes → merge
+3. Approve deploy in GitHub Environments UI
+4. Done
+
+---
+
+## Weekly security scan (automatic)
+
+Every Monday at 07:00 UTC, GitHub runs:
+- Full npm audit (report saved as artifact)
+- Gitleaks scan of entire git history
+- CodeQL static analysis (results appear in Security tab)
+
+You get an email if anything fails. Check Security → Code scanning alerts weekly.
 
 ---
 
 ## Commit message quick reference
 
 ```bash
-# Use the interactive CLI (recommended)
-npm run commit
+npm run commit   # interactive CLI — easiest option
 
-# Or write manually — must follow this format:
+# Or manual:
 git commit -m "feat(mortgage): add biweekly payment schedule"
-git commit -m "fix(bmi): correct imperial unit conversion for pounds"
-git commit -m "docs(readme): add environment variable reference"
+git commit -m "fix(bmi): correct imperial unit conversion"
+git commit -m "docs(readme): update environment variable reference"
 git commit -m "test(compound): add edge cases for daily compounding"
 git commit -m "chore(deps): upgrade vitest to v2"
 ```
 
-If your commit message doesn't match the format, `commitlint` will reject it at the
-`commit-msg` git hook stage. Fix the message and try again.
+commitlint rejects the commit at the hook stage if the format is wrong.
 
 ---
 
-## Secret management rules (quick reference)
+## MCP servers reference
 
-| Where | What to do |
+| Server | What Cline uses it for |
 |---|---|
-| Code | `process.env.MY_KEY` — never a literal string |
-| Local dev | `.env` file (git-ignored) |
-| CI | GitHub Actions Secrets (Settings → Secrets) |
-| Production | Platform env vars (Cloudflare, Vercel, etc.) |
-| Documentation | `.env.example` with `CHANGEME` values — committed |
-
-**If you accidentally commit a secret:**
-1. Rotate the secret immediately at the provider
-2. Run `git filter-repo` or BFG to scrub the history
-3. Force-push all branches (coordinate with team)
-4. Add a gitleaks rule to catch it in future
+| `filesystem` | Read/write project files |
+| `github` | Create PRs, issues, branches |
+| `git` | Status, diff, log, commit |
+| `memory` | Remember project decisions across sessions |
+| `sequential-thinking` | Multi-step reasoning on complex tasks |
+| `postgres` | Inspect DB schema |
+| `brave-search` | Look up docs, error messages |
+| `eslint` | Surface lint issues inline |
+| `puppeteer` | Visual validation of rendered output |
 
 ---
 
-## Coverage requirements
-
-| Code type | Minimum |
-|---|---|
-| Business logic (calculators, utilities) | 90% |
-| API routes | 80% |
-| UI components | 70% |
-
-CI will fail if coverage drops below the configured threshold.
-
----
-
-## Adding a new calculator (Cline task)
-
-Ask Cline:
-> "Create a compound interest calculator. Follow all .clinerules — generate the HTML page,
-> JavaScript module, unit tests, and update the sitemap and homepage."
-
-Cline will:
-1. Create `compound-interest-calculator.html` with full SEO meta + JSON-LD
-2. Create `js/compound-interest-calculator.js` with IIFE module + JSDoc
-3. Create `js/compound-interest-calculator.test.js` with 6+ tests
-4. Update `index.html` category grid
-5. Update `sitemap.xml`
-6. Update `CHANGELOG.md` under `[Unreleased]`
-
----
-
-*Generated June 2026 | Maintained by Cline + developer*
+*Last updated: June 2026*

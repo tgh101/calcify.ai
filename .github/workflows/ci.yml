@@ -1,5 +1,13 @@
 name: CI — Lint, Test & Coverage
-
+# Public repo: unlimited Actions minutes, CodeQL free, Codecov free
+#
+# Branch protection status check names (Settings → Branches → Status checks):
+#   main gate:  "Lint & Format"  |  "Unit Tests (Node 20)"  |  "Build"
+#   dev gate:   "Lint & Format"  |  "Unit Tests (Node 20)"
+#
+# Git Flow enforced by .clinerules:
+#   feat/* fix/* docs/* etc. → PR to dev → CI passes → merge
+#   dev → PR to main → CI passes + manual approval → merge → deploy
 on:
   push:
     branches: [main, dev]
