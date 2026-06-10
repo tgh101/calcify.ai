@@ -1,0 +1,30 @@
+# CODEOWNERS
+# Defines who must review changes to specific files/directories.
+# These owners are automatically requested for review on PRs.
+# Format: <pattern> <GitHub-username(s)>
+# Docs: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Global default owner (catches everything not listed below)
+* @your-github-username
+
+# CI/CD and infrastructure — highest scrutiny
+.github/                    @your-github-username
+.clinerules                  @your-github-username
+.clinerules.d/secrets.md     @your-github-username
+.gitleaks.toml               @your-github-username
+
+# Environment configuration — no changes without owner review
+.env.example                 @your-github-username
+src/config/                  @your-github-username
+
+# Database schema — migrations are irreversible
+src/db/migrations/           @your-github-username
+
+# Security-sensitive areas
+src/auth/                    @your-github-username
+src/middleware/               @your-github-username
+
+# Documentation
+docs/                        @your-github-username
+README.md                    @your-github-username
+CHANGELOG.md                 @your-github-username

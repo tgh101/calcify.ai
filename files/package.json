@@ -1,0 +1,83 @@
+{
+  "name": "your-project-name",
+  "version": "0.1.0",
+  "description": "Description of your project",
+  "private": true,
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  },
+  "scripts": {
+    "dev":              "node src/server.js",
+    "build":            "node scripts/build.js",
+    "start":            "NODE_ENV=production node src/server.js",
+
+    "test":             "vitest run",
+    "test:watch":       "vitest",
+    "test:coverage":    "vitest run --coverage",
+    "test:ui":          "vitest --ui",
+    "test:e2e":         "playwright test",
+    "test:e2e:ui":      "playwright test --ui",
+    "test:all":         "npm run test:coverage && npm run test:e2e",
+
+    "lint":             "eslint src tests --ext .js,.ts",
+    "lint:fix":         "eslint src tests --ext .js,.ts --fix",
+    "format":           "prettier --write .",
+    "format:check":     "prettier --check .",
+
+    "docs":             "jsdoc -c jsdoc.config.json",
+    "docs:watch":       "nodemon --watch src --exec 'npm run docs'",
+
+    "prepare":          "husky install",
+    "commit":           "git-cz",
+
+    "db:migrate":       "node src/db/migrate.js",
+    "db:seed":          "node src/db/seed.js",
+    "db:reset":         "node src/db/reset.js",
+
+    "audit:fix":        "npm audit fix",
+    "validate":         "npm run lint && npm run test:coverage && npm run build"
+  },
+  "dependencies": {
+    "express": "^4.19.0",
+    "helmet": "^7.1.0",
+    "dotenv": "^16.4.0",
+    "express-rate-limit": "^7.3.0",
+    "winston": "^3.13.0"
+  },
+  "devDependencies": {
+    "vitest": "^1.6.0",
+    "@vitest/coverage-v8": "^1.6.0",
+    "@vitest/ui": "^1.6.0",
+    "supertest": "^7.0.0",
+    "@playwright/test": "^1.44.0",
+
+    "eslint": "^8.57.0",
+    "eslint-plugin-jsdoc": "^48.2.0",
+    "prettier": "^3.2.0",
+
+    "husky": "^9.0.0",
+    "lint-staged": "^15.2.0",
+    "commitizen": "^4.3.0",
+    "cz-conventional-changelog": "^3.3.0",
+    "@commitlint/cli": "^19.3.0",
+    "@commitlint/config-conventional": "^19.2.0",
+
+    "jsdoc": "^4.0.3",
+    "nodemon": "^3.1.0"
+  },
+  "lint-staged": {
+    "*.{js,ts}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml}": [
+      "prettier --write"
+    ]
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
+  }
+}

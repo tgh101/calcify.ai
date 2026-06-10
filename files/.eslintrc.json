@@ -1,0 +1,86 @@
+{
+  "env": {
+    "browser": true,
+    "es2022": true,
+    "node": true
+  },
+  "extends": [
+    "eslint:recommended"
+  ],
+  "parserOptions": {
+    "ecmaVersion": 2022,
+    "sourceType": "module"
+  },
+  "plugins": [
+    "jsdoc"
+  ],
+  "rules": {
+    // ── Code quality ───────────────────────────────────────────
+    "no-console": ["error", { "allow": ["warn", "error"] }],
+    "no-debugger": "error",
+    "no-alert": "error",
+    "no-eval": "error",
+    "no-implied-eval": "error",
+    "no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+    "no-var": "error",
+    "prefer-const": "error",
+    "prefer-arrow-callback": "error",
+    "eqeqeq": ["error", "always"],
+    "curly": "error",
+    "no-throw-literal": "error",
+
+    // ── Async ──────────────────────────────────────────────────
+    "no-return-await": "error",
+    "require-await": "error",
+    "no-promise-executor-return": "error",
+
+    // ── Security (no hardcoded secrets) ───────────────────────
+    "no-secrets/no-secrets": "off",  // replaced by gitleaks in CI
+
+    // ── Documentation ──────────────────────────────────────────
+    "jsdoc/require-jsdoc": [
+      "warn",
+      {
+        "publicOnly": true,
+        "require": {
+          "FunctionDeclaration": true,
+          "MethodDefinition": true,
+          "ClassDeclaration": true,
+          "ArrowFunctionExpression": false,
+          "FunctionExpression": false
+        }
+      }
+    ],
+    "jsdoc/require-param": "warn",
+    "jsdoc/require-param-description": "warn",
+    "jsdoc/require-returns": "warn",
+    "jsdoc/require-returns-description": "warn",
+    "jsdoc/check-param-names": "error",
+    "jsdoc/check-types": "error",
+
+    // ── Style (let Prettier handle most, ESLint enforces logic) ─
+    "max-lines-per-function": ["warn", { "max": 25, "skipBlankLines": true, "skipComments": true }],
+    "max-params": ["warn", 3],
+    "complexity": ["warn", 8],
+    "no-nested-ternary": "error",
+    "no-unneeded-ternary": "error"
+  },
+  "overrides": [
+    {
+      // Relax rules in test files
+      "files": ["**/*.test.js", "**/*.spec.js", "tests/**/*.js"],
+      "rules": {
+        "jsdoc/require-jsdoc": "off",
+        "max-lines-per-function": "off",
+        "no-console": "off"
+      }
+    },
+    {
+      // Config files
+      "files": ["*.config.js", "*.config.ts"],
+      "rules": {
+        "jsdoc/require-jsdoc": "off"
+      }
+    }
+  ]
+}
