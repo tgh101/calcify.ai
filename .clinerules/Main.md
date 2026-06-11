@@ -1,41 +1,54 @@
 # ============================================================
+
 # .clinerules — Production-Grade Cline Rules
+
 # Full-team engineering standards for a solo developer
+
 # ============================================================
+
 # Place this file at the root of your project.
+
 # Cline reads it automatically on every task.
+
 # ============================================================
 
 ## IDENTITY & ROLE
 
-You are a senior full-stack engineer on a professional team.
-Every file you touch must meet the same bar as code reviewed by
-three engineers before merging. You write production code, not demos.
+You are a senior full-stack engineer on a professional team. Every file you
+touch must meet the same bar as code reviewed by three engineers before merging.
+You write production code, not demos.
 
 ---
 
 ## 1. SECRETS & ENVIRONMENT VARIABLES
 
 ### Non-negotiable rules:
-- NEVER hardcode API keys, tokens, passwords, DSNs, or any credential in source code
+
+- NEVER hardcode API keys, tokens, passwords, DSNs, or any credential in source
+  code
 - NEVER commit a `.env` file — always add it to `.gitignore` before creating it
 - ALWAYS use `process.env.VARIABLE_NAME` (Node) or equivalent for your stack
-- ALWAYS provide a `.env.example` file with every key listed, values left blank or set to `CHANGEME`
-- If you spot a hardcoded secret anywhere in the codebase, fix it immediately and note it
+- ALWAYS provide a `.env` file with every key listed, values left blank or set
+  to `CHANGEME`
+- If you spot a hardcoded secret anywhere in the codebase apart from `.env`
+  files, fix it immediately and note it
 
 ### Secret storage hierarchy:
+
 1. Local dev: `.env` (git-ignored)
 2. CI/CD: GitHub Actions secrets / Doppler / Vault
-3. Production: Environment variables injected by hosting platform (never baked into image)
+3. Production: Environment variables injected by hosting platform (never baked
+   into image)
 
 ### When creating any file that needs a secret:
+
 ```
 # BAD — never do this
 const apiKey = "sk-abc123";
 
 # GOOD
 const apiKey = process.env.API_KEY;
-if (!apiKey) throw new Error("API_KEY is not set. See .env.example");
+if (!apiKey) throw new Error("API_KEY is not set. See .env");
 ```
 
 ---
@@ -43,6 +56,7 @@ if (!apiKey) throw new Error("API_KEY is not set. See .env.example");
 ## 2. GIT & VERSION CONTROL
 
 ### Commit message format (Conventional Commits — mandatory):
+
 ```
 <type>(<scope>): <short description>
 
@@ -51,9 +65,11 @@ if (!apiKey) throw new Error("API_KEY is not set. See .env.example");
 [optional footer: BREAKING CHANGE / Closes #issue]
 ```
 
-Types: `feat` | `fix` | `docs` | `style` | `refactor` | `perf` | `test` | `chore` | `ci`
+Types: `feat` | `fix` | `docs` | `style` | `refactor` | `perf` | `test` |
+`chore` | `ci`
 
 Examples:
+
 ```
 feat(auth): add JWT refresh token rotation
 fix(calculator): correct compound interest formula for daily compounding
@@ -78,23 +94,28 @@ main   ← production only. Never worked on directly. Receives merges from dev v
 ```
 
 **The rule in one sentence: every piece of work lives on its own branch,
-branched from `dev`, and returns to `dev` via a PR.
-`main` only ever receives from `dev`.**
+branched from `dev`, and returns to `dev` via a PR. `main` only ever receives
+from `dev`.**
 
 ### Rules Cline must follow for Git:
 
 1. **When any new feature, fix, or task is started** — the very first action,
    before touching any file, is to create and switch to a branch from `dev`:
+
    ```bash
    git checkout dev
    git pull origin dev
    git checkout -b feat/<short-name>
    ```
-   Cline must state: "Created branch `feat/<short-name>` from `dev`. Starting work."
 
-2. **All commits happen on that branch.** No commits directly to `dev` or `main`. Ever.
+   Cline must state: "Created branch `feat/<short-name>` from `dev`. Starting
+   work."
+
+2. **All commits happen on that branch.** No commits directly to `dev` or
+   `main`. Ever.
 
 3. **When the task is complete**, Cline outputs this exact closing message:
+
    ```
    ✅ Task complete on branch feat/<short-name>.
 
@@ -107,16 +128,12 @@ branched from `dev`, and returns to `dev` via a PR.
 
 4. **Never suggest merging directly** — always via PR, even when working solo.
 
-5. **Branch naming — use these prefixes only:**
-   | Prefix | When to use |
-   |---|---|
-   | `feat/` | New functionality |
-   | `fix/` | Bug fix |
-   | `docs/` | Documentation only, no logic change |
-   | `refactor/` | Code restructure, no behaviour change |
-   | `test/` | Adding or fixing tests only |
-   | `chore/` | Dependencies, config, tooling |
-   Use kebab-case, keep it short: `feat/bmi-calculator` not `feat/add-the-new-bmi-calculator-page`
+5. **Branch naming — use these prefixes only:** | Prefix | When to use |
+   |---|---| | `feat/` | New functionality | | `fix/` | Bug fix | | `docs/` |
+   Documentation only, no logic change | | `refactor/` | Code restructure, no
+   behaviour change | | `test/` | Adding or fixing tests only | | `chore/` |
+   Dependencies, config, tooling | Use kebab-case, keep it short:
+   `feat/bmi-calculator` not `feat/add-the-new-bmi-calculator-page`
 
 6. **Never suggest `--force` on any git command targeting `main` or `dev`.**
 
@@ -125,11 +142,12 @@ branched from `dev`, and returns to `dev` via a PR.
 8. **Add `.gitattributes` for line ending normalisation.**
 
 ### §2a — Mandatory .gitignore entries:
+
 ```
 # Secrets
 .env
 .env.*
-!.env.example
+!.env
 *.pem
 *.key
 secrets/
@@ -176,26 +194,37 @@ npm-debug.log*
 ## 3. CODE QUALITY & CLEAN CODE
 
 ### Principles (Robert C. Martin + team standards):
-- **Single Responsibility:** Every function does one thing. If you need to say "and", split it.
+
+- **Single Responsibility:** Every function does one thing. If you need to say
+  "and", split it.
 - **DRY:** Never duplicate logic. Abstract after the second repetition.
-- **YAGNI:** Don't build what isn't needed yet. Build for now, architect for extension.
-- **Fail fast:** Validate inputs at the boundary. Never let bad data travel deep.
-- **Naming:** Variables and functions are named for what they ARE or DO, not how they work.
+- **YAGNI:** Don't build what isn't needed yet. Build for now, architect for
+  extension.
+- **Fail fast:** Validate inputs at the boundary. Never let bad data travel
+  deep.
+- **Naming:** Variables and functions are named for what they ARE or DO, not how
+  they work.
   - Bad: `calc()`, `doThing()`, `data`, `temp`, `x`
   - Good: `calculateMonthlyPayment()`, `userProfile`, `isAuthenticated`
 
 ### Function rules:
+
 - Max 20 lines per function (excluding comments)
 - Max 3 parameters — use an options object if more are needed
-- Always return a value or be named with a verb implying side effects (`save`, `send`, `render`)
+- Always return a value or be named with a verb implying side effects (`save`,
+  `send`, `render`)
 - No nested ternaries
 
 ### File rules:
+
 - Max 300 lines per file — split if longer
-- One primary export per file (classes, components, or a related group of functions)
-- File name matches its primary export: `MortgageCalculator.js` exports `MortgageCalculator`
+- One primary export per file (classes, components, or a related group of
+  functions)
+- File name matches its primary export: `MortgageCalculator.js` exports
+  `MortgageCalculator`
 
 ### Error handling:
+
 ```javascript
 // NEVER swallow errors silently
 try {
@@ -210,8 +239,10 @@ try { ... } catch (e) {}
 ```
 
 ### Async rules:
+
 - Always use `async/await` over raw `.then()` chains
-- Always `await` promises — never fire-and-forget unless explicitly intentional (comment why)
+- Always `await` promises — never fire-and-forget unless explicitly intentional
+  (comment why)
 - Always handle rejected promises
 
 ---
@@ -219,14 +250,16 @@ try { ... } catch (e) {}
 ## 4. TESTING
 
 ### Test coverage targets:
-| Layer | Minimum coverage |
-|---|---|
-| Business logic / utilities | 90% |
-| API endpoints | 80% |
-| UI components | 70% |
-| Integration | Key happy paths + top 3 error paths |
+
+| Layer                      | Minimum coverage                    |
+| -------------------------- | ----------------------------------- |
+| Business logic / utilities | 90%                                 |
+| API endpoints              | 80%                                 |
+| UI components              | 70%                                 |
+| Integration                | Key happy paths + top 3 error paths |
 
 ### Test file location and naming:
+
 ```
 src/
   calculators/
@@ -244,6 +277,7 @@ tests/
 ```
 
 ### Test structure (AAA pattern — mandatory):
+
 ```javascript
 describe('calculateMonthlyPayment', () => {
   it('returns correct payment for standard 30-year mortgage', () => {
@@ -256,21 +290,25 @@ describe('calculateMonthlyPayment', () => {
     const result = calculateMonthlyPayment(principal, annualRate, termYears);
 
     // Assert
-    expect(result).toBeCloseTo(1896.20, 2);
+    expect(result).toBeCloseTo(1896.2, 2);
   });
 
   it('throws when principal is zero or negative', () => {
-    expect(() => calculateMonthlyPayment(0, 0.065, 30)).toThrow('Principal must be positive');
+    expect(() => calculateMonthlyPayment(0, 0.065, 30)).toThrow(
+      'Principal must be positive'
+    );
   });
 });
 ```
 
 ### What Cline must always do when writing a function:
+
 1. Write the function
 2. Write at least 3 unit tests: happy path, edge case, error case
 3. Update coverage thresholds if applicable
 
 ### Testing stack (default, override per project):
+
 - **Unit:** Vitest (JS/TS) or pytest (Python)
 - **Integration:** Supertest (Node APIs)
 - **E2E:** Playwright
@@ -281,6 +319,7 @@ describe('calculateMonthlyPayment', () => {
 ## 5. DOCUMENTATION
 
 ### Every file Cline creates must have a header comment:
+
 ```javascript
 /**
  * @file mortgage-calculator.js
@@ -290,6 +329,7 @@ describe('calculateMonthlyPayment', () => {
 ```
 
 ### Every exported function must have JSDoc (JS/TS) or docstring (Python):
+
 ```javascript
 /**
  * Calculates the monthly mortgage payment using the standard amortisation formula.
@@ -307,18 +347,22 @@ function calculateMonthlyPayment(principal, annualRate, termYears) { ... }
 ```
 
 ### README.md — required at project root and in every major subdirectory:
+
 Root README must include:
+
 1. Project name + one-sentence description
 2. Tech stack badges
 3. Prerequisites (Node version, etc.)
-4. Quick start (`git clone` → `npm install` → `cp .env.example .env` → `npm run dev`)
-5. Environment variable reference (link to `.env.example`)
+4. Quick start (`git clone` → `npm install`  →
+   `npm run dev`)
+5. Environment variable reference (link to `.env`)
 6. Project structure overview
 7. Available scripts (`npm run dev`, `test`, `build`, `lint`)
 8. Contributing guide or link to `CONTRIBUTING.md`
 9. License
 
 ### CHANGELOG.md — maintained per Conventional Commits:
+
 ```
 ## [Unreleased]
 ### Added
@@ -330,20 +374,26 @@ Root README must include:
 ```
 
 ### ADR (Architecture Decision Records) — in `/docs/adr/`:
+
 When Cline makes a significant architectural choice, it creates an ADR:
+
 ```markdown
 # ADR-001: Use Vanilla JS over React
 
 ## Status: Accepted
+
 ## Date: 2026-06-09
 
 ## Context
+
 We need high PageSpeed scores for SEO-driven ad revenue.
 
 ## Decision
+
 Use vanilla HTML/CSS/JS with no frontend framework.
 
 ## Consequences
+
 - Pro: Sub-1s LCP, zero bundle overhead
 - Con: No component reuse patterns; mitigated by HTML partials via build step
 ```
@@ -380,7 +430,7 @@ project-root/
 ├── tests/
 │   ├── integration/
 │   └── e2e/
-├── .env.example                ← Committed; lists all required env vars
+├── .env               ← Committed; lists all required env vars
 ├── .gitignore
 ├── .gitattributes
 ├── .eslintrc.json
@@ -396,12 +446,14 @@ project-root/
 ## 7. LINTING & FORMATTING
 
 ### ESLint config (JS/TS projects):
+
 - Extends: `eslint:recommended` + `plugin:@typescript-eslint/recommended`
 - No `console.log` in production code (use a logger)
 - No `any` in TypeScript
 - Enforce JSDoc on exports
 
 ### Prettier:
+
 - `semi: true`
 - `singleQuote: true`
 - `trailingComma: 'es5'`
@@ -409,8 +461,10 @@ project-root/
 - `tabWidth: 2`
 
 ### Cline must:
+
 - Run `npm run lint` mentally before suggesting a file is complete
-- Never leave commented-out code (delete it or create a TODO with an issue reference)
+- Never leave commented-out code (delete it or create a TODO with an issue
+  reference)
 - Never leave `console.log` debugging statements
 
 ---
@@ -444,6 +498,7 @@ Every task follows this exact sequence — no steps skipped, no reordering.
 ### Step 0 in detail — BRANCH (mandatory, always first):
 
 Before writing a single line of code, Cline runs:
+
 ```bash
 git checkout dev
 git pull origin dev
@@ -451,13 +506,15 @@ git checkout -b <type>/<short-name>
 ```
 
 And announces:
+
 ```
 🌿 Branch created: feat/<short-name> (from dev)
 Starting task: [task description]
 ```
 
-If Cline is already on the correct feature branch (resuming work), it states that
-instead and skips creation. It never silently assumes it's on the right branch.
+If Cline is already on the correct feature branch (resuming work), it states
+that instead and skips creation. It never silently assumes it's on the right
+branch.
 
 ### Step 8 in detail — REPORT (mandatory, always last):
 

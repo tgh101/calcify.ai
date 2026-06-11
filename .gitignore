@@ -9,3 +9,4 @@ memory-bank/
 /node_modules
 /files
 SETUP-GUIDE.md
+.agents/

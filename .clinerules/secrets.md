@@ -1,23 +1,28 @@
 # .clinerules.d/secrets.md
+
 # Extended rules: Secrets, Environment Variables & Security
+
 # Loaded automatically by Cline alongside .clinerules
 
 ## SECRET SCANNING
 
 Before completing any task, Cline must scan all modified files for:
-- Strings matching: `sk-`, `pk-`, `ghp_`, `Bearer `, `password=`, `secret=`, `api_key=`
-- Strings matching common patterns: 40-char hex, base64 strings > 30 chars in assignments
+
+- Strings matching: `sk-`, `pk-`, `ghp_`, `Bearer `, `password=`, `secret=`,
+  `api_key=`
+- Strings matching common patterns: 40-char hex, base64 strings > 30 chars in
+  assignments
 - Database connection strings with embedded credentials
 
 If any are found → stop, do not proceed, flag immediately.
 
-## .ENV.EXAMPLE TEMPLATE
+## .ENV TEMPLATE
 
 Every project must have this file committed to git:
 
 ```bash
 # =============================================================
-# .env.example — Copy to .env and fill in values
+# .env — Copy to .env and fill in values
 # NEVER commit the actual .env file
 # =============================================================
 
@@ -64,8 +69,8 @@ FEATURE_NEW_DASHBOARD=false
 
 ## ENV VALIDATION AT STARTUP
 
-Cline must generate an `src/config/env.js` (or equivalent) that validates
-all required env vars at startup and fails loudly if any are missing:
+Cline must generate an `src/config/env.js` (or equivalent) that validates all
+required env vars at startup and fails loudly if any are missing:
 
 ```javascript
 /**
@@ -74,17 +79,14 @@ all required env vars at startup and fails loudly if any are missing:
  * Application will not start if any required variable is missing.
  */
 
-const required = [
-  'NODE_ENV',
-  'DATABASE_URL',
-  'JWT_SECRET',
-  'APP_SECRET',
-];
+const required = ['NODE_ENV', 'DATABASE_URL', 'JWT_SECRET', 'APP_SECRET'];
 
 const missing = required.filter(key => !process.env[key]);
 
 if (missing.length > 0) {
-  console.error(`[FATAL] Missing required environment variables:\n  ${missing.join('\n  ')}`);
+  console.error(
+    `[FATAL] Missing required environment variables:\n  ${missing.join('\n  ')}`
+  );
   console.error('Copy .env.example to .env and fill in all values.');
   process.exit(1);
 }
@@ -110,19 +112,21 @@ Every HTTP server Cline creates must include these headers:
 
 ```javascript
 // Using helmet (Express) or equivalent
-app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "https://pagead2.googlesyndication.com"],
-      styleSrc: ["'self'", "'unsafe-inline'"],
-      imgSrc: ["'self'", "data:", "https:"],
-    }
-  },
-  hsts: { maxAge: 31536000, includeSubDomains: true },
-  noSniff: true,
-  xssFilter: true,
-}));
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", 'https://pagead2.googlesyndication.com'],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        imgSrc: ["'self'", 'data:', 'https:'],
+      },
+    },
+    hsts: { maxAge: 31536000, includeSubDomains: true },
+    noSniff: true,
+    xssFilter: true,
+  })
+);
 ```
 
 ## DEPENDENCY SECURITY POLICY
