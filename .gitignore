@@ -3,6 +3,9 @@
 .flaskenv*
 .env.project
 .env.vault
+.cline*
+/.cline*
+memory-bank/
 /node_modules
 /files
 SETUP-GUIDE.md
