@@ -7,6 +7,10 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ## [Unreleased]
 
 ### Added
+- Financial calculator category page (`financial-calculator.html`) with two-column grid layout, 71 calculator links across 6 subcategories, sidebar search and popular calculators
+- Category page styles (`css/category.css`) for subcategory grids, sidebar, breadcrumbs, and responsive breakpoints
+- Category page JS behaviour (`js/financial-calculator.js`) with debounced search filtering, DOM manipulation, and keyboard support
+- Unit tests for financial category page (`tests/financial-calculator.test.js`) — 6 tests covering filter, DOM behaviour, and init
 - Homepage (`index.html`) with category grid, search bar, CTA, footer, JSON-LD
 - CSS design system: `css/base.css` (variables, reset, typography)
 - Layout styles: `css/layout.css` (header, sub-header, footer, grid, responsive breakpoints)
