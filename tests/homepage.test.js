@@ -21,7 +21,7 @@ describe('filterCalculators', () => {
     });
 
     it('returns empty when no calculator name starts with that letter', () => {
-      const results = filterCalculators('z', CALCULATORS);
+      const results = filterCalculators('x', CALCULATORS);
       expect(results).toEqual([]);
     });
   });
