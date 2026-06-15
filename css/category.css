@@ -1,28 +1,43 @@
 /**
  * @file category.css
- * @description Styles for category landing pages (header nav, breadcrumb, subcategory grid, sidebar, footer pipes)
+ * @description Styles for category landing pages — calculator.net layout (header nav, breadcrumb, calc-table, sidebar, othercalc, top-nav-bar)
  * @module css/category
  */
 
-/* Category header nav */
-.category-nav {
+/* ── Top Nav (centered, accent active) ─────────────────────────── */
+.top-nav {
   display: flex;
-  gap: var(--space-md);
+  flex: 1;
+  gap: 0;
   align-items: center;
+  justify-content: center;
 }
-.category-nav .nav-link {
-  color: var(--color-primary);
-  background: transparent;
-  padding: calc(var(--space-xs) * 1) var(--space-md);
+.top-nav .nav-item {
+  color: #fff;
   text-decoration: none;
-  font-weight: bold;
-  border-radius: 0;
+  font-size: var(--text-sm);
+  padding: var(--space-xs) var(--space-lg);
+  font-weight: normal;
 }
-.category-nav .nav-link.active {
+.top-nav .nav-item.active {
   background: var(--color-accent);
   color: #fff;
-  padding: calc(var(--space-xs) * 1) var(--space-md);
-  border-radius: 0;
+  font-weight: bold;
+}
+.top-nav .nav-item:hover {
+  text-decoration: underline;
+}
+
+/* ── Login link (right side of header) ─────────────────────────── */
+.login-link {
+  color: #fff;
+  text-decoration: none;
+  font-size: var(--text-sm);
+  margin-left: auto;
+  white-space: nowrap;
+}
+.login-link:hover {
+  text-decoration: underline;
 }
 
 /* Breadcrumb */
@@ -47,130 +62,247 @@
   max-width: 80ch;
 }
 
-/* Two-column layout: main + sidebar */
+/* Two-column layout: main + sidebar (wider sidebar) */
 .page-layout {
   display: grid;
-  grid-template-columns: 1fr 320px;
+  grid-template-columns: 1fr 350px;
   gap: var(--space-2xl);
   align-items: start;
 }
 
-/* Subcategory grid: stacked sections with 2-column lists */
-.subcategory-section {
-  margin-bottom: var(--space-2xl);
-}
-.subcategory-section h3 {
-  font-size: var(--text-xl);
-  color: var(--color-primary);
-  margin-bottom: var(--space-sm);
-}
-.subcategory-grid {
+/* ── Calc Table: two-column layout for calculator list sections ──── */
+.calc-table {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--space-md);
+  gap: var(--space-2xl);
+  width: 100%;
 }
-.calculator-list {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--space-xs);
+.calc-column {
+  vertical-align: top;
 }
-.calculator-list a {
+.calc-column h3 {
+  font-size: var(--text-lg);
   color: var(--color-text);
+  font-weight: normal;
+  margin: var(--space-lg) 0 var(--space-md) 0;
+}
+.calc-column h3:first-child {
+  margin-top: 0;
+}
+.calc-link-list a {
+  display: block;
+  color: var(--color-primary);
   text-decoration: none;
   font-size: var(--text-sm);
-  padding: var(--space-xs) 0;
-  display: block;
+  padding: 1px 0;
+  line-height: 1.5;
 }
-.calculator-list a:hover {
-  color: var(--color-primary);
+.calc-link-list a:hover {
   text-decoration: underline;
 }
 
-/* Sidebar */
+/* ── Sidebar ──────────────────────────────────────────────────── */
 .sidebar {
   position: relative;
 }
 .ad-slot {
   background: var(--color-ad-bg);
   border: 1px solid var(--color-ad-border);
-  height: 250px;
+  height: 280px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--color-text-muted);
-  margin-bottom: var(--space-md);
-}
-.sidebar .sidebar-search {
-  margin-bottom: var(--space-md);
-}
-.sidebar .sidebar-search input[type="search"] {
-  width: 100%;
-  padding: var(--space-sm);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
+  margin-bottom: var(--space-lg);
   font-size: var(--text-sm);
 }
-.popular-calcs {
-  background: var(--color-primary-light);
-  padding: var(--space-sm);
+.sidebar-search {
+  margin-bottom: var(--space-lg);
+}
+.sidebar-search-row {
+  display: flex;
+  gap: var(--space-xs);
+}
+.sidebar-search input[type="search"] {
+  flex: 1;
+  padding: var(--space-xs) var(--space-sm);
+  border: 2px solid var(--color-border);
   border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  outline: none;
 }
-.popular-calcs h4 {
-  margin: 0 0 var(--space-sm) 0;
-  font-size: var(--text-md);
-  color: var(--color-primary);
+.sidebar-search input[type="search"]:focus {
+  border-color: var(--color-primary);
 }
-.popular-calcs ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+.sidebar-search-btn {
+  padding: var(--space-xs) var(--space-md);
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  cursor: pointer;
+  font-weight: bold;
+  white-space: nowrap;
 }
-.popular-calcs li {
-  padding: var(--space-xs) 0;
+.sidebar-search-btn:hover {
+  background: var(--color-primary-dark);
 }
-.popular-calcs a {
+/* Static-position search results — push content down when visible */
+.sidebar-search-results {
+  position: static;
+  max-height: 200px;
+  overflow-y: auto;
+  display: none;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-top: none;
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+}
+.sidebar-search-results.active {
+  display: block;
+}
+.sidebar-search-results .search-result-item {
+  padding: var(--space-xs) var(--space-sm);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  text-decoration: none;
+  color: var(--color-text);
+  font-size: var(--text-sm);
+}
+.sidebar-search-results .search-result-item:hover {
+  background: var(--color-primary-light);
   color: var(--color-text);
   text-decoration: none;
 }
-.popular-calcs a:hover {
-  color: var(--color-primary);
+.sidebar-search-results .category-label {
+  font-size: var(--text-xs);
+  color: var(--color-text-light);
+  margin-left: auto;
+  white-space: nowrap;
+}
+.sidebar-search-results .search-no-results {
+  padding: var(--space-sm);
+  color: var(--color-text-muted);
+  text-align: center;
+  font-size: var(--text-sm);
 }
 
-/* Footer links with pipe separator */
-.footer-links-pipe {
-  display: flex;
-  gap: var(--space-md);
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
+/* ── Othercalc block (matching calculator.net sidebar) ──────────── */
+.othercalc-block {
+  margin-bottom: var(--space-lg);
 }
-.footer-links-pipe a {
-  color: var(--color-text-muted);
-  font-size: var(--text-sm);
+.othercalc-title {
+  background: var(--color-primary);
+  padding: var(--space-sm);
+  text-align: left;
+}
+.othercalc-title span {
+  color: #fff;
+  font-weight: bold;
+  font-size: var(--text-base);
+  white-space: nowrap;
+}
+/* ── Othercalc block: popular calculators, 2-column grid ────────── */
+.othercalc-links {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  border: 1px solid var(--color-border);
+  border-top: none;
+  padding: var(--space-xs);
+  text-align: left;
+}
+.othercalc-links a {
+  color: var(--color-text);
   text-decoration: none;
-  position: relative;
+  font-size: var(--text-xs);
+  padding: 2px var(--space-xs);
+  white-space: nowrap;
+}
+.othercalc-links a:hover {
+  text-decoration: underline;
+  color: var(--color-primary);
+}
+.othercalc-categories {
+  display: flex;
+  white-space: nowrap;
+  justify-content: center;
+  padding: var(--space-xs) var(--space-sm);
+  border: 1px solid var(--color-border);
+  border-top: none;
+  background: var(--color-surface);
+  gap: 0;
+}
+.othercalc-categories a {
+  color: var(--color-primary);
+  text-decoration: none;
+  font-size: var(--text-xs);
   padding: 0 var(--space-xs);
 }
-.footer-links-pipe a::after {
-  content: "|";
-  color: var(--color-text-muted);
-  margin-left: var(--space-xs);
+.othercalc-categories a.active {
+  font-weight: bold;
 }
-.footer-links-pipe a:last-child::after {
+.othercalc-categories a:hover {
+  text-decoration: underline;
+}
+.othercalc-categories .separator {
+  color: var(--color-text-light);
+  font-size: var(--text-xs);
+}
+
+/* ── Footer: single row with padding and spacing ───────────────── */
+#site-footer.category-page-footer {
+  padding: var(--space-md) 0;
+  margin-top: var(--space-xl);
+}
+.category-page-footer .footer-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0;
+  flex-wrap: nowrap;
+}
+.category-page-footer .footer-links {
+  display: flex;
+  gap: 0;
+  flex-wrap: nowrap;
+  margin-bottom: 0;
+}
+.category-page-footer .footer-links a {
+  font-size: var(--text-sm);
+  padding: 0 6px;
+  position: relative;
+}
+.category-page-footer .footer-links a::after {
+  content: "|";
+  color: var(--color-text-light);
+  margin-left: 6px;
+}
+.category-page-footer .footer-links a:last-child::after {
   content: "";
   margin-left: 0;
 }
+.category-page-footer .footer-copyright {
+  font-size: var(--text-sm);
+  color: var(--color-text-light);
+  padding: 0 6px;
+}
 
-/* Responsive */
+/* ── Responsive ────────────────────────────────────────────────── */
 @media (max-width: 1024px) {
   .page-layout {
     grid-template-columns: 1fr;
   }
-  .subcategory-grid {
+  .calc-table {
     grid-template-columns: 1fr;
   }
   .sidebar {
     order: 2;
+  }
+  .top-nav .nav-item {
+    padding: var(--space-xs) var(--space-md);
   }
 }
 

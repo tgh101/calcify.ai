@@ -6,12 +6,22 @@
     <title>Financial Calculators - Free Online Financial Calculators | Calcify.ai</title>
     <meta
       name="description"
-      content="Free online financial calculators for mortgage, loans, investments, retirement, tax planning, and more. Instant results, no sign-up."
+      content="A compilation of free financial calculators involving mortgages, loans, investments, debt, retirement, and more, each with related in-depth information."
     />
     <link rel="canonical" href="https://www.calcify.ai/financial-calculator.html" />
     <link rel="stylesheet" href="css/base.css" />
     <link rel="stylesheet" href="css/layout.css" />
     <link rel="stylesheet" href="css/category.css" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "home", "item": "https://www.calcify.ai/" },
+          { "@type": "ListItem", "position": 2, "name": "financial", "item": "https://www.calcify.ai/financial-calculator.html" }
+        ]
+      }
+    </script>
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -23,248 +33,232 @@
     </script>
   </head>
   <body>
+    <!-- ── Header (blue bar, logo + category nav) ──────────────────── -->
     <header id="site-header">
       <div class="container">
         <a href="/" class="logo" aria-label="Calcify.ai home">
           <img src="img/svg/calculator-white.svg" alt="Calcify.ai" width="28" height="28" />
           <span>Calcify.ai</span>
         </a>
-
-        <nav class="category-nav" aria-label="Calculator categories">
-          <a href="financial-calculator.html" class="nav-link active" aria-current="page">Financial</a>
-          <a href="fitness-calculator.html" class="nav-link">Fitness</a>
-          <a href="math-calculator.html" class="nav-link">Math</a>
-          <a href="other-calculator.html" class="nav-link">Others</a>
+        <nav class="top-nav" aria-label="Calculator categories">
+          <a href="financial-calculator.html" class="nav-item active" aria-current="page">Financial</a>
+          <a href="fitness-calculator.html" class="nav-item">Fitness & Health</a>
+          <a href="math-calculator.html" class="nav-item">Math</a>
+          <a href="other-calculator.html" class="nav-item">Others</a>
         </nav>
+        <a href="/sign-in" class="login-link">sign in</a>
       </div>
     </header>
 
+    <!-- ── Main Content ───────────────────────────────────────────── -->
     <main id="main-content">
       <div class="container">
-        <nav class="breadcrumb" aria-label="Breadcrumb">
-          <a href="/">Home</a> › <span>Financial</span>
-        </nav>
-
-        <h1 class="page-title">Financial Calculators</h1>
-        <p class="page-subtitle">
-          The following is a complete list of our financial calculators. Use these free tools to
-          compute mortgages, loans, investments, retirement planning, taxes and more — instant
-          results with clear explanations and examples.
-        </p>
-
         <div class="page-layout">
-          <section class="main-column" aria-label="Financial calculator list">
-            <!-- Mortgage & Real Estate -->
-            <section class="subcategory-section" data-subcategory="mortgage">
-              <h3>Mortgage & Real Estate</h3>
-              <div class="subcategory-grid">
-                <div class="calculator-list" id="mortgage-list">
-                  <a href="mortgage-calculator.html">Mortgage</a>
-                  <a href="amortization-calculator.html">Amortization</a>
-                  <a href="mortgage-payoff-calculator.html">Mortgage Payoff</a>
-                  <a href="house-affordability-calculator.html">House Affordability</a>
-                  <a href="rent-calculator.html">Rent</a>
-                  <a href="debt-to-income-calculator.html">Debt-to-Income Ratio</a>
-                  <a href="real-estate-calculator.html">Real Estate</a>
-                  <a href="refinance-calculator.html">Refinance</a>
-                  <a href="rental-property-calculator.html">Rental Property</a>
-                  <a href="apr-calculator.html">APR</a>
-                </div>
-                <div class="calculator-list">
-                  <a href="fha-loan-calculator.html">FHA Loan</a>
-                  <a href="va-mortgage-calculator.html">VA Mortgage</a>
-                  <a href="home-equity-loan-calculator.html">Home Equity Loan</a>
-                  <a href="heloc-calculator.html">HELOC</a>
-                  <a href="down-payment-calculator.html">Down Payment</a>
-                  <a href="rent-vs-buy-calculator.html">Rent vs Buy</a>
-                </div>
-              </div>
-            </section>
+          <!-- ── Main Column ──────────────────────────────────────── -->
+          <section class="main-column">
+            <!-- Breadcrumb -->
+            <nav class="breadcrumb" aria-label="Breadcrumb">
+              <a href="/">home</a> / <span>financial</span>
+            </nav>
 
-            <!-- Auto -->
-            <section class="subcategory-section" data-subcategory="auto">
-              <h3>Auto</h3>
-              <div class="subcategory-grid">
-                <div class="calculator-list">
-                  <a href="auto-loan-calculator.html">Auto Loan</a>
-                  <a href="cashback-or-low-interest-calculator.html">Cash Back / Low Interest</a>
-                  <a href="auto-lease-calculator.html">Auto Lease</a>
-                </div>
-                <div class="calculator-list"></div>
-              </div>
-            </section>
+            <h1 class="page-title">Financial Calculators</h1>
+            <p class="page-subtitle">The following is a complete list of our financial calculators.</p>
 
-            <!-- Investment -->
-            <section class="subcategory-section" data-subcategory="investment">
-              <h3>Investment</h3>
-              <div class="subcategory-grid">
-                <div class="calculator-list">
-                  <a href="interest-calculator.html">Interest</a>
-                  <a href="investment-calculator.html">Investment</a>
-                  <a href="finance-calculator.html">Finance</a>
-                  <a href="compound-interest-calculator.html">Compound Interest</a>
-                  <a href="interest-rate-calculator.html">Interest Rate</a>
-                  <a href="savings-calculator.html">Savings</a>
+            <!-- Calculator lists — two-column layout matching calculator.net -->
+            <div class="calc-table">
+              <!-- Column 1 -->
+              <div class="calc-column">
+                <h3>Mortgage and Real Estate</h3>
+                <div class="calc-link-list">
+                  <a href="mortgage-calculator.html">Mortgage Calculator</a>
+                  <a href="amortization-calculator.html">Amortization Calculator</a>
+                  <a href="mortgage-payoff-calculator.html">Mortgage Payoff Calculator</a>
+                  <a href="house-affordability-calculator.html">House Affordability Calculator</a>
+                  <a href="rent-calculator.html">Rent Calculator</a>
+                  <a href="debt-to-income-calculator.html">Debt-to-Income Ratio Calculator</a>
+                  <a href="real-estate-calculator.html">Real Estate Calculator</a>
+                  <a href="refinance-calculator.html">Refinance Calculator</a>
+                  <a href="rental-property-calculator.html">Rental Property Calculator</a>
+                  <a href="apr-calculator.html">APR Calculator</a>
+                  <a href="fha-loan-calculator.html">FHA Loan Calculator</a>
+                  <a href="va-mortgage-calculator.html">VA Mortgage Calculator</a>
+                  <a href="home-equity-loan-calculator.html">Home Equity Loan Calculator</a>
+                  <a href="heloc-calculator.html">HELOC Calculator</a>
+                  <a href="down-payment-calculator.html">Down Payment Calculator</a>
+                  <a href="rent-vs-buy-calculator.html">Rent vs. Buy Calculator</a>
                 </div>
-                <div class="calculator-list">
-                  <a href="simple-interest-calculator.html">Simple Interest</a>
-                  <a href="cd-calculator.html">CD</a>
-                  <a href="bond-calculator.html">Bond</a>
-                  <a href="mutual-fund-calculator.html">Mutual Fund</a>
-                  <a href="average-return-calculator.html">Average Return</a>
-                  <a href="irr-calculator.html">IRR</a>
-                </div>
-                <div class="calculator-list">
-                  <a href="roi-calculator.html">ROI</a>
-                  <a href="payback-period-calculator.html">Payback Period</a>
-                  <a href="present-value-calculator.html">Present Value</a>
-                  <a href="future-value-calculator.html">Future Value</a>
-                </div>
-              </div>
-            </section>
 
-            <!-- Retirement -->
-            <section class="subcategory-section" data-subcategory="retirement">
-              <h3>Retirement</h3>
-              <div class="subcategory-grid">
-                <div class="calculator-list">
-                  <a href="retirement-calculator.html">Retirement</a>
-                  <a href="401k-calculator.html">401K</a>
-                  <a href="pension-calculator.html">Pension</a>
-                  <a href="social-security-calculator.html">Social Security</a>
-                  <a href="annuity-calculator.html">Annuity</a>
+                <h3>Auto</h3>
+                <div class="calc-link-list">
+                  <a href="auto-loan-calculator.html">Auto Loan Calculator</a>
+                  <a href="cashback-or-low-interest-calculator.html">Cash Back or Low Interest Calculator</a>
+                  <a href="auto-lease-calculator.html">Auto Lease Calculator</a>
                 </div>
-                <div class="calculator-list">
-                  <a href="annuity-payout-calculator.html">Annuity Payout</a>
-                  <a href="roth-ira-calculator.html">Roth IRA</a>
-                  <a href="ira-calculator.html">IRA</a>
-                  <a href="rmd-calculator.html">RMD</a>
-                </div>
-              </div>
-            </section>
 
-            <!-- Tax and Salary -->
-            <section class="subcategory-section" data-subcategory="tax">
-              <h3>Tax & Salary</h3>
-              <div class="subcategory-grid">
-                <div class="calculator-list">
-                  <a href="income-tax-calculator.html">Income Tax</a>
-                  <a href="salary-calculator.html">Salary</a>
-                  <a href="marriage-tax-calculator.html">Marriage Tax</a>
-                  <a href="estate-tax-calculator.html">Estate Tax</a>
-                </div>
-                <div class="calculator-list">
-                  <a href="take-home-paycheck-calculator.html">Take-Home Paycheck</a>
+                <h3>Investment</h3>
+                <div class="calc-link-list">
+                  <a href="interest-calculator.html">Interest Calculator</a>
+                  <a href="investment-calculator.html">Investment Calculator</a>
+                  <a href="finance-calculator.html">Finance Calculator</a>
+                  <a href="compound-interest-calculator.html">Compound Interest Calculator</a>
+                  <a href="interest-rate-calculator.html">Interest Rate Calculator</a>
+                  <a href="savings-calculator.html">Savings Calculator</a>
+                  <a href="simple-interest-calculator.html">Simple Interest Calculator</a>
+                  <a href="cd-calculator.html">CD Calculator</a>
+                  <a href="bond-calculator.html">Bond Calculator</a>
+                  <a href="mutual-fund-calculator.html">Mutual Fund Calculator</a>
+                  <a href="average-return-calculator.html">Average Return Calculator</a>
+                  <a href="irr-calculator.html">IRR Calculator</a>
+                  <a href="roi-calculator.html">ROI Calculator</a>
+                  <a href="payback-period-calculator.html">Payback Period Calculator</a>
+                  <a href="present-value-calculator.html">Present Value Calculator</a>
+                  <a href="future-value-calculator.html">Future Value Calculator</a>
                 </div>
               </div>
-            </section>
 
-            <!-- Other -->
-            <section class="subcategory-section" data-subcategory="other">
-              <h3>Other</h3>
-              <div class="subcategory-grid">
-                <div class="calculator-list">
-                  <a href="loan-calculator.html">Loan</a>
-                  <a href="payment-calculator.html">Payment</a>
-                  <a href="currency-calculator.html">Currency</a>
-                  <a href="inflation-calculator.html">Inflation</a>
-                  <a href="sales-tax-calculator.html">Sales Tax</a>
-                  <a href="credit-card-calculator.html">Credit Card</a>
+              <!-- Column 2 -->
+              <div class="calc-column">
+                <h3>Retirement</h3>
+                <div class="calc-link-list">
+                  <a href="retirement-calculator.html">Retirement Calculator</a>
+                  <a href="401k-calculator.html">401K Calculator</a>
+                  <a href="pension-calculator.html">Pension Calculator</a>
+                  <a href="social-security-calculator.html">Social Security Calculator</a>
+                  <a href="annuity-calculator.html">Annuity Calculator</a>
+                  <a href="annuity-payout-calculator.html">Annuity Payout Calculator</a>
+                  <a href="roth-ira-calculator.html">Roth IRA Calculator</a>
+                  <a href="ira-calculator.html">IRA Calculator</a>
+                  <a href="rmd-calculator.html">RMD Calculator</a>
                 </div>
-                <div class="calculator-list">
-                  <a href="credit-cards-payoff-calculator.html">Credit Cards Payoff</a>
-                  <a href="debt-payoff-calculator.html">Debt Payoff</a>
-                  <a href="debt-consolidation-calculator.html">Debt Consolidation</a>
-                  <a href="repayment-calculator.html">Repayment</a>
-                  <a href="student-loan-calculator.html">Student Loan</a>
-                  <a href="college-cost-calculator.html">College Cost</a>
+
+                <h3>Tax and Salary</h3>
+                <div class="calc-link-list">
+                  <a href="income-tax-calculator.html">Income Tax Calculator</a>
+                  <a href="salary-calculator.html">Salary Calculator</a>
+                  <a href="marriage-tax-calculator.html">Marriage Tax Calculator</a>
+                  <a href="estate-tax-calculator.html">Estate Tax Calculator</a>
+                  <a href="take-home-paycheck-calculator.html">Take-Home-Paycheck Calculator</a>
                 </div>
-                <div class="calculator-list">
-                  <a href="vat-calculator.html">VAT</a>
-                  <a href="depreciation-calculator.html">Depreciation</a>
-                  <a href="margin-calculator.html">Margin</a>
-                  <a href="discount-calculator.html">Discount</a>
-                  <a href="business-loan-calculator.html">Business Loan</a>
-                </div>
-                <div class="calculator-list">
-                  <a href="personal-loan-calculator.html">Personal Loan</a>
-                  <a href="boat-loan-calculator.html">Boat Loan</a>
-                  <a href="lease-calculator.html">Lease</a>
-                  <a href="budget-calculator.html">Budget</a>
-                  <a href="commission-calculator.html">Commission</a>
+
+                <h3>Other</h3>
+                <div class="calc-link-list">
+                  <a href="loan-calculator.html">Loan Calculator</a>
+                  <a href="payment-calculator.html">Payment Calculator</a>
+                  <a href="currency-calculator.html">Currency Calculator</a>
+                  <a href="inflation-calculator.html">Inflation Calculator</a>
+                  <a href="sales-tax-calculator.html">Sales Tax Calculator</a>
+                  <a href="credit-card-calculator.html">Credit Card Calculator</a>
+                  <a href="credit-cards-payoff-calculator.html">Credit Cards Payoff Calculator</a>
+                  <a href="debt-payoff-calculator.html">Debt Payoff Calculator</a>
+                  <a href="debt-consolidation-calculator.html">Debt Consolidation Calculator</a>
+                  <a href="repayment-calculator.html">Repayment Calculator</a>
+                  <a href="student-loan-calculator.html">Student Loan Calculator</a>
+                  <a href="college-cost-calculator.html">College Cost Calculator</a>
+                  <a href="vat-calculator.html">VAT Calculator</a>
+                  <a href="depreciation-calculator.html">Depreciation Calculator</a>
+                  <a href="margin-calculator.html">Margin Calculator</a>
+                  <a href="discount-calculator.html">Discount Calculator</a>
+                  <a href="business-loan-calculator.html">Business Loan Calculator</a>
+                  <a href="personal-loan-calculator.html">Personal Loan Calculator</a>
+                  <a href="boat-loan-calculator.html">Boat Loan Calculator</a>
+                  <a href="lease-calculator.html">Lease Calculator</a>
+                  <a href="budget-calculator.html">Budget Calculator</a>
+                  <a href="commission-calculator.html">Commission Calculator</a>
                 </div>
               </div>
-            </section>
+            </div>
           </section>
 
+          <!-- ── Sidebar ─────────────────────────────────────────── -->
           <aside class="sidebar" aria-label="Sidebar">
-            <div class="ad-slot" role="region" aria-label="Advertisement">Ad slot 300×250</div>
-
-            <div class="sidebar-search" role="search" aria-label="Search calculators">
-              <label for="sidebar-search-input" class="sr-only">Search financial calculators</label>
-              <input id="sidebar-search-input" type="search" placeholder="Search financial calculators…" />
+            <div class="ad-slot" role="region" aria-label="Advertisement">
+              <span>Ad slot — 300×250</span>
             </div>
 
-            <div class="popular-calcs" id="popular-calcs" aria-live="polite">
-              <h4>Popular</h4>
-              <ul id="popular-list">
-                <li><a href="mortgage-calculator.html">Mortgage</a></li>
-                <li><a href="loan-calculator.html">Loan</a></li>
-                <li><a href="compound-interest-calculator.html">Compound Interest</a></li>
-                <li><a href="investment-calculator.html">Investment</a></li>
-                <li><a href="retirement-calculator.html">Retirement</a></li>
-                <li><a href="income-tax-calculator.html">Income Tax</a></li>
-                <li><a href="credit-card-calculator.html">Credit Card</a></li>
-                <li><a href="currency-calculator.html">Currency</a></li>
-              </ul>
+            <!-- Search using same search.js logic as homepage -->
+            <div class="sidebar-search" role="search">
+              <div class="sidebar-search-row">
+                <label for="sidebar-search-input" class="sr-only">Search financial calculators</label>
+                <input
+                  type="search"
+                  id="sidebar-search-input"
+                  placeholder="Search calculators..."
+                  aria-label="Search financial calculators"
+                  autocomplete="off"
+                />
+                <button type="button" id="sidebar-search-btn" class="sidebar-search-btn" aria-label="Search">Search</button>
+              </div>
+              <div
+                id="sidebar-search-results"
+                class="sidebar-search-results"
+                role="listbox"
+                aria-label="Search results"
+              ></div>
             </div>
 
-            <nav class="footer-links-pipe" aria-label="Footer quick links">
-              <a href="financial-calculator.html">Financial</a>
-              <a href="fitness-calculator.html">Fitness</a>
-              <a href="math-calculator.html">Math</a>
-              <a href="other-calculator.html">Others</a>
-            </nav>
+            <div class="othercalc-block" id="othercalc">
+              <div class="othercalc-title">
+                <span>Popular Financial Calculator</span>
+              </div>
+              <div class="othercalc-links">
+                <a href="mortgage-calculator.html">Mortgage</a>
+                <a href="loan-calculator.html">Loan</a>
+                <a href="auto-loan-calculator.html">Auto Loan</a>
+                <a href="interest-calculator.html">Interest</a>
+                <a href="payment-calculator.html">Payment</a>
+                <a href="retirement-calculator.html">Retirement</a>
+                <a href="amortization-calculator.html">Amortization</a>
+                <a href="investment-calculator.html">Investment</a>
+                <a href="currency-calculator.html">Currency</a>
+                <a href="inflation-calculator.html">Inflation</a>
+                <a href="finance-calculator.html">Finance</a>
+                <a href="mortgage-payoff-calculator.html">Mortgage Payoff</a>
+                <a href="income-tax-calculator.html">Income Tax</a>
+                <a href="compound-interest-calculator.html">Compound Interest</a>
+                <a href="salary-calculator.html">Salary</a>
+                <a href="401k-calculator.html">401K</a>
+                <a href="interest-rate-calculator.html">Interest Rate</a>
+                <a href="sales-tax-calculator.html">Sales Tax</a>
+                <a href="financial-calculator.html">More Financial Calculators</a>
+              </div>
+              <div class="othercalc-categories">
+                <a href="financial-calculator.html" class="active">Financial</a>
+                <span class="separator">|</span>
+                <a href="fitness-calculator.html">Fitness & Health</a>
+                <span class="separator">|</span>
+                <a href="math-calculator.html">Math</a>
+                <span class="separator">|</span>
+                <a href="other-calculator.html">Others</a>
+              </div>
+            </div>
           </aside>
         </div>
       </div>
     </main>
 
-    <footer id="site-footer">
-      <div class="container">
-        <div class="footer-disclaimer">
-          <p>
-            Calcify.ai is a free online calculator directory that helps you solve everyday problems
-            with instant, accurate results. Whether you need to figure out monthly mortgage
-            payments, calculate your BMI, work out a tip, or crunch numbers for a school project,
-            our easy-to-use tools are here to help. No sign-up, no fees — just fast, reliable
-            calculations at your fingertips.
-          </p>
-        </div>
-
+    <!-- ── Footer ─────────────────────────────────────────────────── -->
+    <footer id="site-footer" class="category-page-footer">
+      <div class="footer-row">
         <nav class="footer-links" aria-label="Footer navigation">
-          <a href="about.html">About Us</a> |
-          <a href="contact.html">Contact Us</a> |
-          <a href="faq.html">FAQ</a> |
-          <a href="sitemap.xml">Sitemap</a> |
-          <a href="terms.html">Terms of Use</a> |
+          <a href="about.html">About Us</a>
+          <a href="contact.html">Contact Us</a>
+          <a href="faq.html">FAQ</a>
+          <a href="sitemap.xml">Sitemap</a>
+          <a href="terms.html">Terms of Use</a>
           <a href="privacy.html">Privacy Policy</a>
         </nav>
-
-        <p class="footer-copyright">&copy; 2026 Calcify.ai. All rights reserved.</p>
+        <span class="footer-copyright">&copy; 2026 Calcify.ai.</span>
       </div>
     </footer>
 
+    <script src="js/search.js"></script>
     <script src="js/financial-calculator.js"></script>
     <script>
-      // Initialize category page behaviour
-      if (typeof initFinancialCategory === 'function') {
-        initFinancialCategory({
-          searchInputId: 'sidebar-search-input',
-          popularBlockId: 'popular-calcs',
-          subcategorySelector: '.subcategory-section',
-          calculatorLinkSelector: '.calculator-list a',
-        });
+      // Search using same logic as homepage
+      var finSearchInput = document.getElementById('sidebar-search-input');
+      var finSearchResults = document.getElementById('sidebar-search-results');
+      if (finSearchInput && finSearchResults && typeof initHeaderSearch === 'function') {
+        initHeaderSearch(finSearchInput, finSearchResults, getCalculators());
       }
     </script>
   </body>

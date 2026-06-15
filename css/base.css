@@ -35,17 +35,17 @@
   --font-body: Arial, Helvetica, sans-serif;
   --font-mono: "Courier New", Courier, monospace;
 
-  /* Type Scale (base 32px per spec, proportional scaling) */
-  --text-xs:   20px;
-  --text-sm:   24px;
-  --text-base: 32px;
-  --text-md:   36px;
-  --text-lg:   40px;
-  --text-xl:   48px;
-  --text-2xl:  56px;
-  --text-3xl:  64px;
+  /* Type Scale (base 22px per spec, proportional scaling) */
+  --text-xs:   14px;
+  --text-sm:   16px;
+  --text-base: 22px;
+  --text-md:   24px;
+  --text-lg:   28px;
+  --text-xl:   32px;
+  --text-2xl:  38px;
+  --text-3xl:  44px;
 
-  /* Spacing (comfortable for 32px text) */
+  /* Spacing (comfortable for 22px text) */
   --space-xs:   8px;
   --space-sm:   12px;
   --space-md:   20px;

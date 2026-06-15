@@ -25,6 +25,13 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - "Contact Us" and "FAQ" links added to footer
 
 ### Changed
+- Fixed `css/category.css`: added `flex: 1` to `.top-nav` so it fills header space and centers correctly between logo and sign-in link
+- Fixed `css/category.css`: ensured `#site-footer.category-page-footer { padding: 0 }` overrides layout.css default to keep footer nav + copyright in one row
+- Restored "Terms of Use" link in category page footer
+- Increased footer font size from `--text-xs` (12px) to `--text-sm` (14px) for better readability
+- Fixed footer alignment: added `margin-bottom: 0` to `.category-page-footer .footer-links` to override `layout.css` default, ensuring copyright stays inline with links
+- Added padding to category page footer (`var(--space-md) 0`) for spacing between footer content and borders, and separation from body
+- Added `margin-top: var(--space-xl)` to category page footer for spacing between footer and main page content
 - Increased sub-header height to 1.5x by using `padding: calc(var(--space-xl) * 1.5) 0` (54px instead of 36px)
 - Fixed search bug: 2-character queries (e.g. "mo") no longer match keywords, preventing false positives like "Average Calculator" matching via keyword "mode". Keyword matching now requires 3+ characters.
 - Set all category heading colors to accent orange (--color-accent) — a unified, non-blue color for all category names
