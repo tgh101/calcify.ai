@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ## [Unreleased]
 
 ### Added
+- Other calculator category page (`other-calculator.html`)
 - Math calculator category page (`math-calculator.html`)
 - Fitness & Health calculator category page (`fitness-calculator.html`)
 - Financial calculator category page (`financial-calculator.html`) with two-column grid layout, 71 calculator links across 6 subcategories, sidebar search and popular calculators
