@@ -7,6 +7,37 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ## [Unreleased]
 
 ### Added
+- Mortgage calculator page (`mortgage-calculator.html`) with full form, SVG pie/line charts, amortisation tables, biweekly comparison, and educational content
+- Mortgage calculator logic (`js/mortgage-calculator.js`) with 10 exported pure functions: calculateMonthlyPayment, buildAmortizationSchedule, calculateBiweeklyPayment, formatCurrency, computeTotalCosts, generatePieChartData, buildAnnualTableHTML, buildMonthlyTableHTML, insertComma2, proComma2, cunitchange
+- Unit tests for mortgage calculator (`tests/mortgage-calculator.test.js`) — 22 tests covering 6 modules
+- Box-shadow effect on all calculator form input fields and select boxes
+
+### Fixed
+- Line chart now shows cumulative interest and cumulative payment (running total over full term) instead of per-year values
+- Line chart Y-axis labels now show in "K" format (e.g. 200K, 400K) without dollar sign
+- Line chart increased to 350×220 for better readability
+- Line chart legend placed at top-left of plot area with larger 13px font to avoid overlapping lines
+- Line chart X-axis now dynamically reflects actual mortgage payment years (not fixed to Loan Term)
+- Clear button now only clears input fields to empty without affecting results section or collapsing panels
+- Calculator panel padding reduced for tighter width matching amortization table
+- Biweekly table now uses same styling as House Price summary table (gray rows, bold rows, white border-bottom)
+- Biweekly Payback Results header now reads "(without extra payment)" and uses same bold/gray styling as House Price header
+- Biweekly Payment row is now normal text (no bold/gray)
+- "Payoff in approx." now shows just "years" once
+- Added margin between calculator panel and "Amortization schedule" title
+- `mcvsblegend` font size increased to 13px for readability
+- Pie chart now shows all percentage labels (including small slices)
+- Pie chart legend font size increased to 14px
+- Removed "Annual Tax & Cost" header text below "Include Taxes & Costs Below" checkbox
+
+### Changed
+- All calculator form input fields now left-aligned (was right-aligned)
+- Box-shadow changed from inset (inner shadow) to outer shadow on all input fields and selects
+- Tax/cost checkbox toggle now uses `visibility` instead of `display` to prevent input field shifting when toggling
+- Biweekly "Payoff in approx." no longer shows dollar sign
+- Amortization table cells more compact (padding reduced to 1px 4px, white-space: nowrap)
+- Tooltip icons replaced from calculator-white.svg to help.svg (question mark in circle icon)
+- Help icon (help.svg) positioned inline between label text and input box using flex layout
 - Other calculator category page (`other-calculator.html`)
 - Math calculator category page (`math-calculator.html`)
 - Fitness & Health calculator category page (`fitness-calculator.html`)

@@ -1,0 +1,715 @@
+<!--
+  @file mortgage-calculator.html
+  @description Mortgage calculator page with full form, results, SVG charts, amortisation tables, and educational content
+  @module html/mortgage-calculator
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mortgage Calculator - Free Online Mortgage Calculator | Calcify.ai</title>
+  <meta name="description" content="Free mortgage calculator to find monthly payment, total home ownership cost, and amortization schedule with options for taxes, PMI, HOA, and early payoff.">
+  <link rel="canonical" href="https://www.calcify.ai/mortgage-calculator.html" />
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/category.css" />
+  <style>
+    /* ── Mortgage calculator page-specific styles ───────────────── */
+    .panel {
+      background: #f9f9f9;
+      border: 1px solid #ccc;
+      padding: 10px 8px;
+      margin-bottom: 20px;
+    }
+    .panel table {
+      margin: 0 auto;
+    }
+    .panel table td {
+      padding: 3px 2px;
+      font-size: 14px;
+    }
+    .inhalf { width: 75px; }
+    .innormal { width: 90px; }
+    .inlongest { width: 160px; }
+    .in4char { width: 45px; }
+    .indollar { text-align: left; }
+    .inpct { text-align: left; }
+    .panel select {
+      font-size: 14px;
+      padding: 3px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    }
+    .panel input[type="text"] {
+      font-size: 14px;
+      padding: 3px;
+      border: 1px solid #aaa;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    }
+    .panel input[type="submit"],
+    .panel input[type="button"] {
+      background: #3d7ebf;
+      color: #fff;
+      border: none;
+      padding: 8px 24px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .panel input[type="submit"]:hover,
+    .panel input[type="button"]:hover {
+      background: #2c5f8f;
+    }
+    .panel .ttimg {
+      vertical-align: middle;
+      cursor: help;
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
+    }
+    .panel .label-cell {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      justify-content: flex-end;
+    }
+    .panel .label-cell .ttimg {
+      position: relative;
+      top: -1px;
+    }
+    .panel .cbcontainer {
+      display: inline-flex;
+      align-items: center;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .panel .cbcontainer input { margin-right: 4px; }
+
+    /* ── Calculator layout: equal columns ──────────────────────── */
+    .calculator-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+    @media (max-width: 1024px) {
+      .calculator-layout { grid-template-columns: 1fr; }
+    }
+
+    /* ── Results ───────────────────────────────────────────────── */
+    #results-container { display: none; }
+    #results-container.has-error .h2result {
+      background: #d32f2f;
+      color: #fff;
+      padding: 10px;
+    }
+    .h2result {
+      font-size: 22px;
+      font-weight: bold;
+      color: #fff;
+      background: #388e3c;
+      margin: 10px 0;
+      padding: 10px;
+    }
+    .h2result-error {
+      font-size: 18px;
+      font-weight: bold;
+      color: #fff;
+      background: #d32f2f;
+      margin: 10px 0;
+      padding: 10px;
+    }
+    .results-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .results-table td {
+      padding: 4px 8px;
+      font-size: 14px;
+      border-bottom: 1px solid #fff;
+    }
+    .results-table tr.bold-row td { font-weight: bold; }
+    .results-table tr.gray-row td { background: #eee; }
+    .results-table td.align-right { text-align: right; }
+    .results-table .nowrap-label { white-space: nowrap; }
+
+    /* ── Amortisation table ────────────────────────────────────── */
+    .amortization-layout {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 20px;
+      margin-top: 10px;
+    }
+    @media (max-width: 1024px) {
+      .amortization-layout { grid-template-columns: 1fr; }
+    }
+    .cinfoT {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .cinfoT th {
+      background: #ddd;
+      padding: 4px;
+      font-weight: bold;
+    }
+    .cinfoT td {
+      padding: 1px 4px;
+      border-bottom: 1px solid #eee;
+      white-space: nowrap;
+    }
+    .cinfoT tr.align-right td { text-align: right; }
+    .cinfoT tr.align-center td { text-align: center; }
+    .cinfoT tr td[colspan] {
+      background: #f5f5f5;
+      font-weight: bold;
+      padding: 6px;
+    }
+
+    /* Biweekly */
+    #biweekly-section { display: none; }
+
+    /* ── Pie chart legend font ──────────────────────────────────── */
+    .mcplegend { font-size: 14px !important; }
+
+    /* ── Line chart legend font ────────────────────────────────── */
+    .mcvsblegend { font-size: 13px !important; }
+
+    /* ── Educational content ───────────────────────────────────── */
+    .educational-content { margin-top: 30px; }
+    .educational-content h2 { font-size: 20px; margin: 20px 0 10px; }
+    .educational-content h3 { font-size: 18px; margin: 16px 0 8px; }
+    .educational-content p { margin: 8px 0; line-height: 1.6; font-size: 14px; }
+    .educational-content ul, .educational-content ol { margin: 8px 0 8px 24px; }
+    .educational-content li { margin: 4px 0; font-size: 14px; line-height: 1.5; }
+    .educational-content a { color: #3d7ebf; }
+    .educational-content a:hover { text-decoration: underline; }
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "home", "item": "https://www.calcify.ai/" },
+      { "@type": "ListItem", "position": 2, "name": "financial", "item": "https://www.calcify.ai/financial-calculator.html" },
+      { "@type": "ListItem", "position": 3, "name": "mortgage calculator", "item": "https://www.calcify.ai/mortgage-calculator.html" }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Mortgage Calculator",
+    "description": "Free mortgage calculator to find monthly payment, total home ownership cost, and amortization schedule.",
+    "url": "https://www.calcify.ai/mortgage-calculator.html"
+  }
+  </script>
+</head>
+<body>
+  <!-- Header (blue bar, logo + category nav) -->
+  <header id="site-header">
+    <div class="container">
+      <a href="/" class="logo" aria-label="Calcify.ai home">
+        <img src="img/svg/calculator-white.svg" alt="Calcify.ai" width="28" height="28" />
+        <span>Calcify.ai</span>
+      </a>
+      <nav class="top-nav" aria-label="Calculator categories">
+        <a href="financial-calculator.html" class="nav-item active" aria-current="page">Financial</a>
+        <a href="fitness-calculator.html" class="nav-item">Fitness & Health</a>
+        <a href="math-calculator.html" class="nav-item">Math</a>
+        <a href="other-calculator.html" class="nav-item">Others</a>
+      </nav>
+      <a href="/sign-in" class="login-link">sign in</a>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main id="main-content">
+    <div class="container">
+      <div class="page-layout">
+        <!-- Main Column -->
+        <section class="main-column">
+          <!-- Breadcrumb -->
+          <nav class="breadcrumb" aria-label="Breadcrumb">
+            <a href="/">home</a> / <a href="financial-calculator.html">financial</a> / <span>mortgage calculator</span>
+          </nav>
+
+          <h1 class="page-title">Mortgage Calculator</h1>
+
+          <!-- Calculator: left form + right results (equal columns) -->
+          <div class="calculator-layout">
+            <!-- Left: Form Panel -->
+            <div class="panel">
+              <form name="calform" onsubmit="calculateMortgage(); return false;">
+                <table>
+                  <tr>
+                    <td align="right">Home Price</td>
+                    <td align="right"><input type="text" name="chouseprice" id="chouseprice" value="400,000" class="inhalf indollar"></td>
+                    <td>&nbsp;</td>
+                  </tr>
+                   <tr>
+                     <td align="right">
+                       <label for="cdownpayment" class="label-cell">
+                         Down Payment
+                         <img class="ttimg" alt="?" src="img/svg/help.svg" title="The upfront payment of the purchase, usually a percentage of the total price. Typically, mortgage lenders want the borrower to put 20% or more as a down payment. If the borrowers make a down payment of less than 20%, they will normally be required to pay private mortgage insurance (PMI).">
+                       </label>
+                     </td>
+                     <td align="right"><input type="text" name="cdownpayment" id="cdownpayment" value="20" class="inhalf inpct"></td>
+                     <td>
+                       <select name="cdownpaymentunit" id="cdownpaymentunit" onchange="cunitchange('cdownpayment', this.value);">
+                         <option value="p" selected>%</option>
+                         <option value="d">$</option>
+                       </select>
+                     </td>
+                   </tr>
+                  <tr>
+                    <td align="right">
+                      <label for="cloanterm" class="label-cell">
+                        Loan Term
+                        <img class="ttimg" alt="?" src="img/svg/help.svg" title="The amount of time over which the loan must be repaid in full. Most fixed-rate mortgages are for 15, 20, or 30-year terms. A shorter period, such as 15 or 20 years, typically includes a lower interest rate.">
+                      </label>
+                    </td>
+                    <td align="right"><input type="text" name="cloanterm" id="cloanterm" value="30" class="inhalf"></td>
+                    <td>years</td>
+                  </tr>
+                  <tr>
+                    <td align="right">
+                      <label for="cinterestrate" class="label-cell">
+                        Interest Rate
+                        <img class="ttimg" alt="?" src="img/svg/help.svg" title="The percentage of the loan charged as a cost of borrowing.">
+                      </label>
+                    </td>
+                    <td align="right"><input type="text" name="cinterestrate" id="cinterestrate" value="6.545" class="inhalf inpct"></td>
+                    <td>&nbsp;</td>
+                  </tr>
+                  <tr>
+                    <td align="right">Start Date</td>
+                    <td align="left" colspan="2">
+                      <select name="cstartmonth" id="cstartmonth">
+                        <option value="1">Jan</option>
+                        <option value="2">Feb</option>
+                        <option value="3">Mar</option>
+                        <option value="4">Apr</option>
+                        <option value="5">May</option>
+                        <option value="6" selected>Jun</option>
+                        <option value="7">Jul</option>
+                        <option value="8">Aug</option>
+                        <option value="9">Sep</option>
+                        <option value="10">Oct</option>
+                        <option value="11">Nov</option>
+                        <option value="12">Dec</option>
+                      </select>
+                      <input type="text" name="cstartyear" id="cstartyear" value="2026" class="in4char">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="3"><br>
+                      <label for="caddoptional" class="cbcontainer">
+                        <input type="checkbox" name="caddoptional" id="caddoptional" value="1" checked onchange="cshtaxcost();">
+                        <b><span id="ctaxcostdesc">Include Taxes & Costs Below</span></b>
+                      </label>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="3">
+                      <div id="ctaxcost" style="display:block;">
+                        <table>
+                          <tr>
+                            <td align="right">
+                              <label for="cpropertytaxes" class="label-cell">
+                                Property Taxes
+                                <img class="ttimg" alt="?" src="img/svg/help.svg" title="A tax that property owners pay to governing authorities. In the U.S., property tax is usually managed by municipal or county governments. The annual real estate tax in the U.S. varies by location; on average, Americans pay about 1.1% of their property's value as property tax each year.">
+                              </label>
+                            </td>
+                            <td align="right"><input type="text" name="cpropertytaxes" id="cpropertytaxes" value="1.2" class="innormal inpct"></td>
+                            <td>
+                              <select name="cpropertytaxesunit" id="cpropertytaxesunit" onchange="cunitchange('cpropertytaxes', this.value);">
+                                <option value="p" selected>%</option>
+                                <option value="d">$</option>
+                              </select>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td align="right">
+                              <label for="chomeins" class="label-cell">
+                                Home Insurance
+                                <img class="ttimg" alt="?" src="img/svg/help.svg" title="An insurance policy that protects the owner from accidents that may happen to their real estate properties. The cost of home insurance varies according to factors such as location, condition of the property, and the coverage amount.">
+                              </label>
+                            </td>
+                            <td align="right"><input type="text" name="chomeins" id="chomeins" value="1,500" class="innormal indollar"></td>
+                            <td>
+                              <select name="chomeinsunit" id="chomeinsunit" onchange="cunitchange('chomeins', this.value);">
+                                <option value="p">%</option>
+                                <option value="d" selected>$</option>
+                              </select>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td align="right">
+                              <label for="cpmi" class="label-cell">
+                                PMI Insurance
+                                <img class="ttimg" alt="?" src="img/svg/help.svg" title="Private mortgage insurance (PMI) protects the mortgage lender if the borrower is unable to repay the loan. If the down payment is less than 20% of the property's value, the lender will normally require the borrower to purchase PMI. The annual cost typically ranges from 0.3% to 1.9% of the loan amount.">
+                              </label>
+                            </td>
+                            <td align="right"><input type="text" name="cpmi" id="cpmi" value="0" class="innormal indollar"></td>
+                            <td>
+                              <select name="cpmiunit" id="cpmiunit" onchange="cunitchange('cpmi', this.value);">
+                                <option value="p">%</option>
+                                <option value="d" selected>$</option>
+                              </select>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td align="right">
+                              <label for="choa" class="label-cell">
+                                HOA Fee
+                                <img class="ttimg" alt="?" src="img/svg/help.svg" title="A fee imposed on the property owner by a homeowner's association (HOA). Condominiums, townhomes, and some single-family homes commonly require the payment of HOA fees. Annual HOA fees usually amount to less than one percent of the property value.">
+                              </label>
+                            </td>
+                            <td align="right"><input type="text" name="choa" id="choa" value="0" class="innormal indollar"></td>
+                            <td>
+                              <select name="choaunit" id="choaunit" onchange="cunitchange('choa', this.value);">
+                                <option value="p">%</option>
+                                <option value="d" selected>$</option>
+                              </select>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td align="right">
+                              <label for="cothercost" class="label-cell">
+                                Other Costs
+                                <img class="ttimg" alt="?" src="img/svg/help.svg" title="Such as utilities, home maintenance costs, and anything pertaining to the general upkeep of the property. It is common to spend 1% or more of the property value on annual maintenance alone.">
+                              </label>
+                            </td>
+                            <td align="right"><input type="text" name="cothercost" id="cothercost" value="4,000" class="innormal indollar"></td>
+                            <td>
+                              <select name="cothercostunit" id="cothercostunit" onchange="cunitchange('cothercost', this.value);">
+                                <option value="p">%</option>
+                                <option value="d" selected>$</option>
+                              </select>
+                            </td>
+                          </tr>
+                        </table>
+
+                        <div style="padding:10px 0;font-weight:bold;font-size:14px;">
+                          <span id="cmoreoptionlinks"><a href="#" onclick="cshmoreoption(1);return false;">+ More Options</a></span>
+                          <input type="hidden" name="cmop" id="cmoreoption" value="0">
+                        </div>
+
+                        <table id="cmoreoptioninputs" style="display:none;">
+                          <tr><td colspan="2" style="padding-top:5px;font-weight:bold;text-align:left;font-size:14px;">Annual Tax & Cost Increase</td></tr>
+                          <tr><td style="padding-left:10px;text-align:left;font-size:13px;">Property Taxes Increase</td><td><input type="text" name="cptinc" id="cptinc" value="0" class="in4char inpct"></td></tr>
+                          <tr><td style="padding-left:10px;text-align:left;font-size:13px;">Home Insurance Increase</td><td><input type="text" name="chiinc" id="chiinc" value="0" class="in4char inpct"></td></tr>
+                          <tr><td style="padding-left:10px;text-align:left;font-size:13px;">HOA Fee Increase</td><td><input type="text" name="choainc" id="choainc" value="0" class="in4char inpct"></td></tr>
+                          <tr><td style="padding-left:10px;text-align:left;font-size:13px;">Other Costs Increase</td><td><input type="text" name="cocinc" id="cocinc" value="0" class="in4char inpct"></td></tr>
+                          <tr><td colspan="3" style="padding:10px 0 3px;font-weight:bold;text-align:left;font-size:14px;">Extra Payments</td></tr>
+                          <tr>
+                            <td colspan="3" style="padding-left:10px;text-align:left;font-size:13px;">Extra Monthly Pay
+                              <div style="padding-bottom:5px;">
+                                <input type="text" name="cexma" id="cexma" value="0" class="innormal indollar">
+                                from <select name="cexmsm" id="cexmsm">
+                                  <option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option><option value="4">Apr</option><option value="5">May</option><option value="6" selected>Jun</option><option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option><option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option>
+                                </select>
+                                <input type="text" name="cexmsy" id="cexmsy" value="2026" class="in4char">
+                              </div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td colspan="2" style="padding-left:10px;text-align:left;font-size:13px;">Extra Yearly Pay
+                              <div style="padding-bottom:5px;">
+                                <input type="text" name="cexya" id="cexya" value="0" class="innormal indollar">
+                                from <select name="cexysm" id="cexysm">
+                                  <option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option><option value="4">Apr</option><option value="5">May</option><option value="6" selected>Jun</option><option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option><option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option>
+                                </select>
+                                <input type="text" name="cexysy" id="cexysy" value="2026" class="in4char">
+                              </div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td colspan="2" style="padding-left:10px;text-align:left;font-size:13px;">Extra One-time Pay
+                              <div>
+                                <input type="text" name="cexoa" id="cexoa" value="0" class="innormal indollar">
+                                in <select name="cexosm" id="cexosm">
+                                  <option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option><option value="4">Apr</option><option value="5">May</option><option value="6" selected>Jun</option><option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option><option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option>
+                                </select>
+                                <input type="text" name="cexosy" id="cexosy" value="2026" class="in4char">
+                              </div>
+                              <div id="cadditionalonetimelink" style="text-align:center;padding-top:8px;">
+                                <a href="#" onclick="cshadditionalonetime(1);return false;">+ Additional One-Time Payments</a>
+                              </div>
+                              <div id="cadditionalonetimediv" style="display:none;padding:5px 0;">
+                                <input type="hidden" name="caot" id="cadditionalonetime" value="0">
+                                <input type="text" name="xa1" id="xa1" value="0" class="innormal indollar"> in <select name="xm1" id="xm1"><option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option><option value="4">Apr</option><option value="5">May</option><option value="6" selected>Jun</option><option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option><option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option></select> <input type="text" name="xy1" id="xy1" value="2026" class="in4char"><br>
+                                <input type="text" name="xa2" id="xa2" value="0" class="innormal indollar"> in <select name="xm2" id="xm2"><option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option><option value="4">Apr</option><option value="5">May</option><option value="6" selected>Jun</option><option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option><option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option></select> <input type="text" name="xy2" id="xy2" value="2026" class="in4char"><br>
+                                <input type="text" name="xa3" id="xa3" value="0" class="innormal indollar"> in <select name="xm3" id="xm3"><option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option><option value="4">Apr</option><option value="5">May</option><option value="6" selected>Jun</option><option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option><option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option></select> <input type="text" name="xy3" id="xy3" value="2026" class="in4char"><br>
+                                <input type="text" name="xa4" id="xa4" value="0" class="innormal indollar"> in <select name="xm4" id="xm4"><option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option><option value="4">Apr</option><option value="5">May</option><option value="6" selected>Jun</option><option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option><option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option></select> <input type="text" name="xy4" id="xy4" value="2026" class="in4char"><br>
+                                <input type="text" name="xa5" id="xa5" value="0" class="innormal indollar"> in <select name="xm5" id="xm5"><option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option><option value="4">Apr</option><option value="5">May</option><option value="6" selected>Jun</option><option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option><option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option></select> <input type="text" name="xy5" id="xy5" value="2026" class="in4char"><br>
+                                <input type="text" name="xa6" id="xa6" value="0" class="innormal indollar"> in <select name="xm6" id="xm6"><option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option><option value="4">Apr</option><option value="5">May</option><option value="6" selected>Jun</option><option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option><option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option></select> <input type="text" name="xy6" id="xy6" value="2026" class="in4char"><br>
+                                <input type="text" name="xa7" id="xa7" value="0" class="innormal indollar"> in <select name="xm7" id="xm7"><option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option><option value="4">Apr</option><option value="5">May</option><option value="6" selected>Jun</option><option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option><option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option></select> <input type="text" name="xy7" id="xy7" value="2026" class="in4char"><br>
+                                <input type="text" name="xa8" id="xa8" value="0" class="innormal indollar"> in <select name="xm8" id="xm8"><option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option><option value="4">Apr</option><option value="5">May</option><option value="6" selected>Jun</option><option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option><option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option></select> <input type="text" name="xy8" id="xy8" value="2026" class="in4char"><br>
+                                <input type="text" name="xa9" id="xa9" value="0" class="innormal indollar"> in <select name="xm9" id="xm9"><option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option><option value="4">Apr</option><option value="5">May</option><option value="6" selected>Jun</option><option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option><option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option></select> <input type="text" name="xy9" id="xy9" value="2026" class="in4char"><br>
+                                <input type="text" name="xa10" id="xa10" value="0" class="innormal indollar"> in <select name="xm10" id="xm10"><option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option><option value="4">Apr</option><option value="5">May</option><option value="6" selected>Jun</option><option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option><option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option></select> <input type="text" name="xy10" id="xy10" value="2026" class="in4char"><br>
+                              </div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td colspan="2" style="padding:10px 0 6px;">
+                              <label for="csbw" class="cbcontainer">
+                                <input type="checkbox" name="csbw" id="csbw" value="1" checked>
+                                <b>Show Biweekly Payback Results</b>
+                              </label>
+                            </td>
+                          </tr>
+                        </table>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="3" align="center" style="padding-top:10px;">
+                      <input type="submit" value="Calculate">
+                      <input type="button" value="Clear" onclick="clearForm();">
+                    </td>
+                  </tr>
+                </table>
+              </form>
+            </div>
+
+            <!-- Right: Results -->
+            <div>
+              <a name="results" id="results"></a>
+              <div id="results-container" style="height:100%;">
+                <h2 class="h2result">Monthly Pay: <span id="monthly-pay-value">$2,032.10</span></h2>
+
+                <div id="extra-payment-info" style="display:none;font-size:14px;margin:8px 0;padding:8px;background:#f0f7ff;border:1px solid #b3d4fc;border-radius:4px;">
+                  <span id="extra-payment-text"></span>
+                </div>
+
+                <div id="result-error-message" style="display:none;"></div>
+
+                <table class="results-table">
+                  <tr><td>&nbsp;</td><td align="right"><b>Monthly</b></td><td align="right"><b>Total</b></td></tr>
+                  <tr class="gray-row bold-row">
+                    <td class="nowrap-label"><b>Mortgage Payment</b></td>
+                    <td align="right"><b><span id="result-mortgage-payment-monthly">$2,032.10</span></b></td>
+                    <td align="right"><b><span id="result-mortgage-payment-total">$731,554.96</span></b></td>
+                  </tr>
+                  <tr><td>Property Tax</td><td align="right"><span id="result-property-tax-monthly">$400.00</span></td><td align="right"><span id="result-property-tax-total">$144,000.00</span></td></tr>
+                  <tr><td>Home Insurance</td><td align="right"><span id="result-home-ins-monthly">$125.00</span></td><td align="right"><span id="result-home-ins-total">$45,000.00</span></td></tr>
+                  <tr><td>PMI</td><td align="right"><span id="result-pmi-monthly">$0.00</span></td><td align="right"><span id="result-pmi-total">$0.00</span></td></tr>
+                  <tr><td>HOA Fee</td><td align="right"><span id="result-hoa-monthly">$0.00</span></td><td align="right"><span id="result-hoa-total">$0.00</span></td></tr>
+                  <tr><td>Other Costs</td><td align="right"><span id="result-other-cost-monthly">$333.33</span></td><td align="right"><span id="result-other-cost-total">$120,000.00</span></td></tr>
+                  <tr class="gray-row bold-row">
+                    <td class="nowrap-label"><b>Total Out-of-Pocket</b></td>
+                    <td align="right"><b><span id="result-total-out-of-pocket-monthly">$2,890.43</span></b></td>
+                    <td align="right"><b><span id="result-total-out-of-pocket-total">$1,040,554.96</span></b></td>
+                  </tr>
+                </table>
+
+                <!-- Pie chart -->
+                <div id="pie-chart-container" style="text-align:center;margin:10px 0;"></div>
+
+                <!-- Summary table -->
+                <table class="results-table" style="margin-top:10px;">
+                  <tr class="gray-row bold-row"><td colspan="2"><b>House Price</b></td><td align="right"><span id="result-house-price">$400,000.00</span></td></tr>
+                  <tr><td colspan="2">Loan Amount</td><td align="right"><span id="result-loan-amount">$320,000.00</span></td></tr>
+                  <tr><td colspan="2">Down Payment</td><td align="right"><span id="result-down-payment">$80,000.00</span></td></tr>
+                  <tr><td colspan="2">Total of <span id="result-total-payments-count">360</span> Mortgage Payments</td><td align="right"><span id="result-total-mortgage-payments">$731,554.96</span></td></tr>
+                  <tr><td colspan="2">Total Interest</td><td align="right"><span id="result-total-interest">$411,554.96</span></td></tr>
+                  <tr><td colspan="2">Mortgage Payoff Date</td><td align="right"><span id="result-payoff-date">Jun. 2056</span></td></tr>
+                </table>
+
+                <!-- Biweekly section -->
+                <div id="biweekly-section">
+                  <table class="results-table">
+                    <tr class="gray-row bold-row"><td colspan="2"><b>Biweekly Payback Results (without extra payment)</b></td><td></td></tr>
+                    <tr><td colspan="2">Biweekly Payment</td><td align="right"><span id="biweekly-payment">$1,016.05</span></td></tr>
+                    <tr><td colspan="2">Payoff in approx.</td><td align="right"><span id="biweekly-years">14</span> years</td></tr>
+                    <tr><td colspan="2">Total Biweekly Payments</td><td align="right"><span id="biweekly-total">$0.00</span></td></tr>
+                    <tr><td colspan="2">Interest Savings vs. Standard</td><td align="right" style="color:#388e3c;"><span id="biweekly-savings">$0.00</span></td></tr>
+                  </table>
+                </div>
+
+                <!-- Interest Saved table -->
+                <table class="results-table" id="interest-saved-table" style="display:none;">
+                  <tr class="gray-row bold-row"><td colspan="2"><b>Interest to be Saved</b></td><td></td></tr>
+                  <tr><td>With the extra payment(s)</td><td align="right"><span id="saved-extra">$0.00</span></td></tr>
+                  <tr><td>With Biweekly Payment Only<br><small>(without Extra Payments)</small></td><td align="right"><span id="saved-biweekly">$0.00</span></td></tr>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Amortization Schedule (table left, chart right) -->
+          <h2 style="padding-bottom:10px;">Amortization schedule</h2>
+          <div class="amortization-layout">
+            <div>
+              <div id="amoselect" style="padding-bottom:5px;font-weight:bold;font-size:14px;">
+                Annual Schedule &nbsp; &nbsp; <a href="#" onclick="amoChange(1);return false;">Monthly Schedule</a>
+              </div>
+              <div id="monthlyamo" style="display:none;"></div>
+              <div id="yearlyamo" style="display:block;"></div>
+            </div>
+            <div style="text-align:center;">
+              <div id="line-chart-container"></div>
+            </div>
+          </div>
+
+          <!-- Educational content -->
+          <div class="educational-content">
+            <p>The Mortgage Calculator helps estimate the monthly payment due along with other financial costs associated with mortgages. There are options to include extra payments or annual percentage increases of common mortgage-related expenses. The calculator is mainly intended for use by U.S. residents.</p>
+
+            <h2>Mortgages</h2>
+            <p>A mortgage is a loan secured by property, usually real estate property. Lenders define it as the money borrowed to pay for real estate. In essence, the lender helps the buyer pay the seller of a house, and the buyer agrees to repay the money borrowed over a period of time, usually 15 or 30 years in the U.S. Each month, a payment is made from buyer to lender. A portion of the monthly payment is called the principal, which is the original amount borrowed. The other portion is the interest, which is the cost paid to the lender for using the money. There may be an escrow account involved to cover the cost of property taxes and insurance. The buyer cannot be considered the full owner of the mortgaged property until the last monthly payment is made. In the U.S., the most common mortgage loan is the conventional 30-year fixed-interest loan, which represents 70% to 90% of all mortgages. Mortgages are how most people are able to own homes in the U.S.</p>
+
+            <h2>Mortgage Calculator Components</h2>
+            <p>A mortgage usually includes the following key components. These are also the basic components of a mortgage calculator.</p>
+            <ul>
+              <li><b>Loan amount</b>&mdash;the amount borrowed from a lender or bank. In a mortgage, this amounts to the purchase price minus any down payment. The maximum loan amount one can borrow normally correlates with household income or affordability.</li>
+              <li><a name="mcdown"></a><b>Down payment</b>&mdash;the upfront payment of the purchase, usually a percentage of the total price. This is the portion of the purchase price covered by the borrower. Typically, mortgage lenders want the borrower to put 20% or more as a down payment. In some cases, borrowers may put down as low as 3%. If the borrowers make a down payment of less than 20%, they will be required to pay private mortgage insurance (PMI). Borrowers need to hold this insurance until the loan's remaining principal dropped below 80% of the home's original purchase price. A general rule-of-thumb is that the higher the down payment, the more favorable the interest rate and the more likely the loan will be approved.</li>
+              <li><a name="mclterm"></a><b>Loan term</b>&mdash;the amount of time over which the loan must be repaid in full. Most fixed-rate mortgages are for 15, 20, or 30-year terms. A shorter period, such as 15 or 20 years, typically includes a lower interest rate.</li>
+              <li><a name="mcinterest"></a><b>Interest rate</b>&mdash;the percentage of the loan charged as a cost of borrowing. Mortgages can charge either fixed-rate mortgages (FRM) or adjustable-rate mortgages (ARM). As the name implies, interest rates remain the same for the term of the FRM loan. The calculator above calculates fixed rates only. For ARMs, interest rates are generally fixed for a period of time, after which they will be periodically adjusted based on market indices. ARMs transfer part of the risk to borrowers. Therefore, the initial interest rates are normally 0.5% to 2% lower than FRM with the same loan term. Mortgage interest rates are normally expressed in Annual Percentage Rate (APR), sometimes called nominal APR or effective APR. It is the interest rate expressed as a periodic rate multiplied by the number of compounding periods in a year. For example, if a mortgage rate is 6% APR, it means the borrower will have to pay 6% divided by twelve, which comes out to 0.5% in interest every month.</li>
+            </ul>
+
+            <h2>Costs Associated with Home Ownership and Mortgages</h2>
+            <p>Monthly mortgage payments usually comprise the bulk of the financial costs associated with owning a house, but there are other substantial costs to keep in mind. These costs are separated into two categories, recurring and non-recurring.</p>
+            <p><b>Recurring Costs</b></p>
+            <p>Most recurring costs persist throughout and beyond the life of a mortgage. They are a significant financial factor. Property taxes, home insurance, HOA fees, and other costs increase with time as a byproduct of inflation. In the calculator, the recurring costs are under the "Include Options Below" checkbox. There are also optional inputs within the calculator for annual percentage increases under "More Options." Using these can result in more accurate calculations.</p>
+            <ul>
+              <li><a name="mcptax"></a><b>Property taxes</b>&mdash;a tax that property owners pay to governing authorities. In the U.S., property tax is usually managed by municipal or county governments. All 50 states impose taxes on property at the local level. The annual real estate tax in the U.S. varies by location; on average, Americans pay about 1.1% of their property's value as property tax each year.</li>
+              <li><a name="mchins"></a><b>Home insurance</b>&mdash;an insurance policy that protects the owner from accidents that may happen to their real estate properties. Home insurance can also contain personal liability coverage, which protects against lawsuits involving injuries that occur on and off the property. The cost of home insurance varies according to factors such as location, condition of the property, and the coverage amount.</li>
+              <li><a name="mcpmi"></a><b>Private mortgage insurance (PMI)</b>&mdash;protects the mortgage lender if the borrower is unable to repay the loan. In the U.S. specifically, if the down payment is less than 20% of the property's value, the lender will normally require the borrower to purchase PMI until the loan-to-value ratio (LTV) reaches 80% or 78%. PMI price varies according to factors such as down payment, size of the loan, and credit of the borrower. The annual cost typically ranges from 0.3% to 1.9% of the loan amount.</li>
+              <li><a name="mchoa"></a><b>HOA fee</b>&mdash;a fee imposed on the property owner by a homeowner's association (HOA), which is an organization that maintains and improves the property and environment of the neighborhoods within its purview. Condominiums, townhomes, and some single-family homes commonly require the payment of HOA fees. Annual HOA fees usually amount to less than one percent of the property value.</li>
+              <li><a name="mcother"></a><b>Other costs</b>&mdash;includes utilities, home maintenance costs, and anything pertaining to the general upkeep of the property. It is common to spend 1% or more of the property value on annual maintenance alone.</li>
+            </ul>
+            <p><b>Non-Recurring Costs</b></p>
+            <p>These costs aren't addressed by the calculator, but they are still important to keep in mind.</p>
+            <ul>
+              <li><b>Closing costs</b>&mdash;the fees paid at the closing of a real estate transaction. These are not recurring fees, but they can be expensive. In the U.S., the closing cost on a mortgage can include an attorney fee, the title service cost, recording fee, survey fee, property transfer tax, brokerage commission, mortgage application fee, points, appraisal fee, inspection fee, home warranty, pre-paid home insurance, pro-rata property taxes, pro-rata homeowner association dues, pro-rata interest, and more. These costs typically fall on the buyer, but it is possible to negotiate a "credit" with the seller or the lender. It is not unusual for a buyer to pay about $10,000 in total closing costs on a $400,000 transaction.</li>
+              <li><b>Initial renovations</b>&mdash;some buyers choose to renovate before moving in. Examples of renovations include changing the flooring, repainting the walls, updating the kitchen, or even overhauling the entire interior or exterior. While these expenses can add up quickly, renovation costs are optional, and owners may choose not to address renovation issues immediately.</li>
+              <li><b>Miscellaneous</b>&mdash;new furniture, new appliances, and moving costs are typical non-recurring costs of a home purchase. This also includes repair costs.</li>
+            </ul>
+
+            <h2>Early Repayment and Extra Payments</h2>
+            <p>In many situations, mortgage borrowers may want to pay off mortgages earlier rather than later, either in whole or in part, for reasons including but not limited to interest savings, wanting to sell their home, or refinancing. Our calculator can factor in monthly, annual, or one-time extra payments. However, borrowers need to understand the advantages and disadvantages of paying ahead on the mortgage.</p>
+            <p><b>Early Repayment Strategies</b></p>
+            <p>Aside from paying off the mortgage loan entirely, typically, there are three main strategies that can be used to repay a mortgage loan earlier. Borrowers mainly adopt these strategies to save on interest. These methods can be used in combination or individually.</p>
+            <ol>
+              <li><b>Make extra payments</b>&mdash;This is simply an extra payment over and above the monthly payment. On typical long-term mortgage loans, a very big portion of the earlier payments will go towards paying down interest rather than the principal. Any extra payments will decrease the loan balance, thereby decreasing interest and allowing the borrower to pay off the loan earlier in the long run. Some people form the habit of paying extra every month, while others pay extra whenever they can. There are optional inputs in the Mortgage Calculator to include many extra payments, and it can be helpful to compare the results of supplementing mortgages with or without extra payments.</li>
+              <li><b>Biweekly payments</b>&mdash;The borrower pays half the monthly payment every two weeks. With 52 weeks in a year, this amounts to 26 payments or 13 months of mortgage repayments during the year. This method is mainly for those who receive their paycheck biweekly. It is easier for them to form a habit of taking a portion from each paycheck to make mortgage payments. Displayed in the calculated results are biweekly payments for comparison purposes.</li>
+              <li><b>Refinance to a loan with a shorter term</b>&mdash;Refinancing involves taking out a new loan to pay off an old loan. In employing this strategy, borrowers can shorten the term, typically resulting in a lower interest rate. This can speed up the payoff and save on interest. However, this usually imposes a larger monthly payment on the borrower. Also, a borrower will likely need to pay closing costs and fees when they refinance.</li>
+            </ol>
+            <p><b>Reasons for early repayment</b></p>
+            <p>Making extra payments offers the following advantages:</p>
+            <ul>
+              <li><b>Lower interest costs</b>&mdash;Borrowers can save money on interest, which often amounts to a significant expense.</li>
+              <li><b>Shorter repayment period</b>&mdash;A shortened repayment period means the payoff will come faster than the original term stated in the mortgage agreement. This results in the borrower paying off the mortgage faster.</li>
+              <li><b>Personal satisfaction</b>&mdash;The feeling of emotional well-being that can come with freedom from debt obligations. A debt-free status also empowers borrowers to spend and invest in other areas.</li>
+            </ul>
+            <p><b>Drawbacks of early repayment</b></p>
+            <p>However, extra payments also come at a cost. Borrowers should consider the following factors before paying ahead on a mortgage:</p>
+            <ul>
+              <li><b>Possible prepayment penalties</b>&mdash;A prepayment penalty is an agreement, most likely explained in a mortgage contract, between a borrower and a mortgage lender that regulates what the borrower is allowed to pay off and when. Penalty amounts are usually expressed as a percent of the outstanding balance at the time of prepayment or a specified number of months of interest. The penalty amount typically decreases with time until it phases out eventually, normally within 5 years. One-time payoff due to home selling is normally exempt from a prepayment penalty.</li>
+              <li><b>Opportunity costs</b>&mdash;Paying off a mortgage early may not be ideal since mortgage rates are relatively low compared to other financial rates. For example, paying off a mortgage with a 4% interest rate when a person could potentially make 10% or more by instead investing that money can be a significant opportunity cost.</li>
+              <li><b>Capital locked up in the house</b>&mdash;Money put into the house is cash that the borrower cannot spend elsewhere. This may ultimately force a borrower to take out an additional loan if an unexpected need for cash arises.</li>
+              <li><b>Loss of tax deduction</b>&mdash;Borrowers in the U.S. can deduct mortgage interest costs from their taxes. Lower interest payments result in less of a deduction. However, only taxpayers who itemize (rather than taking the standard deduction) can take advantage of this benefit.</li>
+            </ul>
+
+            <h2>Brief History of Mortgages in the U.S.</h2>
+            <p>In the early 20<sup>th</sup> century, buying a home involved saving up a large down payment. Borrowers would have to put 50% down, take out a three or five-year loan, then face a balloon payment at the end of the term.</p>
+            <p>Only four in ten Americans could afford a home under such conditions. During the Great Depression, one-fourth of homeowners lost their homes.</p>
+            <p>To remedy this situation, the government created the Federal Housing Administration (FHA) and Fannie Mae in the 1930s to bring liquidity, stability, and affordability to the mortgage market. Both entities helped to bring 30-year mortgages with more modest down payments and universal construction standards.</p>
+            <p>These programs also helped returning soldiers finance a home after the end of World War II and sparked a construction boom in the following decades. Also, the FHA helped borrowers during harder times, such as the inflation crisis of the 1970s and the drop in energy prices in the 1980s.</p>
+            <p>By 2001, the homeownership rate had reached a record level of 68.1%.</p>
+            <p>Government involvement also helped during the 2008 financial crisis. The crisis forced a federal takeover of Fannie Mae as it lost billions amid massive defaults, though it returned to profitability by 2012.</p>
+            <p>The FHA also offered further help amid the nationwide drop in real estate prices. It stepped in, claiming a higher percentage of mortgages amid backing by the Federal Reserve. This helped to stabilize the housing market by 2013. Today, both entities continue to actively insure millions of single-family homes and other residential properties.</p>
+          </div>
+
+        </section>
+
+        <!-- Sidebar -->
+        <aside class="sidebar" aria-label="Sidebar">
+          <div class="ad-slot" role="region" aria-label="Advertisement">
+            <span>Ad slot — 300×250</span>
+          </div>
+
+          <!-- Search -->
+          <div class="sidebar-search" role="search">
+            <div class="sidebar-search-row">
+              <label for="sidebar-search-input" class="sr-only">Search financial calculators</label>
+              <input type="search" id="sidebar-search-input" placeholder="Search calculators..." aria-label="Search financial calculators" autocomplete="off" />
+              <button type="button" id="sidebar-search-btn" class="sidebar-search-btn" aria-label="Search">Search</button>
+            </div>
+            <div id="sidebar-search-results" class="sidebar-search-results" role="listbox" aria-label="Search results"></div>
+          </div>
+
+          <div class="othercalc-block" id="othercalc">
+            <div class="othercalc-title">
+              <span>Popular Financial Calculator</span>
+            </div>
+            <div class="othercalc-links">
+              <a href="mortgage-calculator.html">Mortgage</a>
+              <a href="loan-calculator.html">Loan</a>
+              <a href="auto-loan-calculator.html">Auto Loan</a>
+              <a href="interest-calculator.html">Interest</a>
+              <a href="payment-calculator.html">Payment</a>
+              <a href="retirement-calculator.html">Retirement</a>
+              <a href="amortization-calculator.html">Amortization</a>
+              <a href="investment-calculator.html">Investment</a>
+              <a href="currency-calculator.html">Currency</a>
+              <a href="inflation-calculator.html">Inflation</a>
+              <a href="finance-calculator.html">Finance</a>
+              <a href="mortgage-payoff-calculator.html">Mortgage Payoff</a>
+              <a href="income-tax-calculator.html">Income Tax</a>
+              <a href="compound-interest-calculator.html">Compound Interest</a>
+              <a href="salary-calculator.html">Salary</a>
+              <a href="401k-calculator.html">401K</a>
+              <a href="interest-rate-calculator.html">Interest Rate</a>
+              <a href="sales-tax-calculator.html">Sales Tax</a>
+              <a href="financial-calculator.html">More Financial Calculators</a>
+            </div>
+            <div class="othercalc-categories">
+              <a href="financial-calculator.html" class="active">Financial</a>
+              <span class="separator">|</span>
+              <a href="fitness-calculator.html">Fitness & Health</a>
+              <span class="separator">|</span>
+              <a href="math-calculator.html">Math</a>
+              <span class="separator">|</span>
+              <a href="other-calculator.html">Others</a>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer id="site-footer" class="category-page-footer">
+    <div class="footer-row">
+      <nav class="footer-links" aria-label="Footer navigation">
+        <a href="about.html">About Us</a>
+        <a href="contact.html">Contact Us</a>
+        <a href="faq.html">FAQ</a>
+        <a href="sitemap.xml">Sitemap</a>
+        <a href="terms.html">Terms of Use</a>
+        <a href="privacy.html">Privacy Policy</a>
+      </nav>
+      <span class="footer-copyright">&copy; 2026 Calcify.ai.</span>
+    </div>
+  </footer>
+
+  <script src="js/search.js"></script>
+  <script src="js/mortgage-calculator.js"></script>
+  <script>
+    initMortgageCalculator();
+
+    // Sidebar search
+    var finSearchInput = document.getElementById('sidebar-search-input');
+    var finSearchResults = document.getElementById('sidebar-search-results');
+    if (finSearchInput && finSearchResults && typeof initHeaderSearch === 'function') {
+      initHeaderSearch(finSearchInput, finSearchResults, getCalculators());
+    }
+  </script>
+</body>
+</html>
