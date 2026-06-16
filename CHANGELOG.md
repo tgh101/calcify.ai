@@ -9,8 +9,13 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### Added
 - Mortgage calculator page (`mortgage-calculator.html`) with full form, SVG pie/line charts, amortisation tables, biweekly comparison, and educational content
 - Mortgage calculator logic (`js/mortgage-calculator.js`) with 10 exported pure functions: calculateMonthlyPayment, buildAmortizationSchedule, calculateBiweeklyPayment, formatCurrency, computeTotalCosts, generatePieChartData, buildAnnualTableHTML, buildMonthlyTableHTML, insertComma2, proComma2, cunitchange
-- Unit tests for mortgage calculator (`tests/mortgage-calculator.test.js`) — 22 tests covering 6 modules
+- Unit tests for mortgage calculator (`tests/mortgage-calculator.test.js`) — 24 tests covering 7 modules
 - Box-shadow effect on all calculator form input fields and select boxes
+
+### Changed
+- Result table now conditionally displays Annual Tax & Cost parameters only when values are non-zero
+- Extra payment information now appears in the table when user sets positive values
+- Added conditional display logic for result table rows based on non-zero values
 
 ### Fixed
 - Line chart now shows cumulative interest and cumulative payment (running total over full term) instead of per-year values

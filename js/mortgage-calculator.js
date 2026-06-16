@@ -1209,7 +1209,7 @@ function calculateMortgage() {
     monthlyPayEl.textContent = formatCurrency(monthlyPayment);
   }
 
-  // Update breakdown table
+  // Update breakdown table - only show rows with non-zero values
   const setVal = (id, val) => {
     const elem = document.getElementById(id);
     if (elem) {
@@ -1217,8 +1217,30 @@ function calculateMortgage() {
     }
   };
 
+  // Function to conditionally show table rows based on non-zero values
+  const showRowIfNonZero = (rowId, monthlyValue, totalValue) => {
+    const row = document.querySelector(`#${rowId}`);
+    if (row) {
+      if (monthlyValue > 0 || totalValue > 0) {
+        row.style.display = '';
+      } else {
+        row.style.display = 'none';
+      }
+    }
+  };
+
+  // Always show mortgage payment row
   setVal('result-mortgage-payment-monthly', monthlyPayment);
   setVal('result-mortgage-payment-total', costData.total.mortgage);
+
+  // Conditionally show Annual Tax & Cost rows
+  showRowIfNonZero('property-tax-row', costData.monthly.propertyTax, costData.total.propertyTax);
+  showRowIfNonZero('home-ins-row', costData.monthly.homeIns, costData.total.homeIns);
+  showRowIfNonZero('pmi-row', costData.monthly.pmi, costData.total.pmi);
+  showRowIfNonZero('hoa-row', costData.monthly.hoa, costData.total.hoa);
+  showRowIfNonZero('other-cost-row', costData.monthly.other, costData.total.other);
+
+  // Set values for all rows (even if hidden)
   setVal('result-property-tax-monthly', costData.monthly.propertyTax);
   setVal('result-property-tax-total', costData.total.propertyTax);
   setVal('result-home-ins-monthly', costData.monthly.homeIns);
