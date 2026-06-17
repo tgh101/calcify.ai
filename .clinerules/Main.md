@@ -113,6 +113,7 @@ from `dev`.**
 
 2. **All commits happen on that branch.** No commits directly to `dev` or
    `main`. Ever.
+   always commit changes after the task is ended to that working branch
 
 3. **When the task is complete**, Cline outputs this exact closing message:
 
