@@ -1222,7 +1222,7 @@ function calculateMortgage() {
         + formatCurrency(interestSavedByExtras) + ' in interest</b>.';
     }
     if (interestSavedTable) {
-      interestSavedTable.style.display = 'block';
+      interestSavedTable.style.display = '';
       setVal('saved-extra',    interestSavedByExtras);
       setVal('saved-biweekly', interestSavedByBiweekly);
     }
