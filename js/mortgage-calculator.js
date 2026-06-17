@@ -1178,7 +1178,7 @@ function calculateMortgage() {
   setVal('result-house-price',   homePrice);
   setVal('result-loan-amount',   loanAmount);
   setVal('result-down-payment',  downPayment);
-  setVal('result-total-payments-count', schedule.length);
+  setVal('result-total-payments-count', String(schedule.length));
   setVal('result-total-mortgage-payments', costData.total.mortgage);
   setVal('result-total-interest',          totalInterestWithExtras);
   setVal('result-total-extra-payments',    totalExtraPayments);
@@ -1195,7 +1195,7 @@ function calculateMortgage() {
   }
 
   // PMI payoff date — show only if PMI is visible in table
-  setVal('result-pmi-payments-count', pmiPaymentCount || 0);
+  setVal('result-pmi-payments-count', String(pmiPaymentCount || 0));
   const pmiPayoffRow = document.querySelector('#pmi-payoff-row');
   if (pmiPayoffRow) pmiPayoffRow.style.display = hasPmi ? '' : 'none';
   const pmiPayoffEntry = pmiPayoffMonth > 0 ? schedule[pmiPayoffMonth - 1] : null;
