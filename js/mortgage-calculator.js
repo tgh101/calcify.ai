@@ -1178,9 +1178,14 @@ function calculateMortgage() {
   setVal('result-house-price',   homePrice);
   setVal('result-loan-amount',   loanAmount);
   setVal('result-down-payment',  downPayment);
+  setVal('result-total-payments-count', schedule.length);
   setVal('result-total-mortgage-payments', costData.total.mortgage);
   setVal('result-total-interest',          totalInterestWithExtras);
   setVal('result-total-extra-payments',    totalExtraPayments);
+
+  // Show/hide Total Extra Payments row
+  const totalExtraRow = document.querySelector('#total-extra-payments-row');
+  if (totalExtraRow) totalExtraRow.style.display = hasAnyExtra ? '' : 'none';
 
   // Payoff date
   const lastEntry = schedule[schedule.length - 1];
@@ -1189,11 +1194,14 @@ function calculateMortgage() {
     setVal('result-payoff-date', MONTHS[lastEntry.dateMonth - 1] + ' ' + lastEntry.dateYear);
   }
 
-  // PMI payoff date
+  // PMI payoff date — show only if PMI is visible in table
+  setVal('result-pmi-payments-count', pmiPaymentCount || 0);
+  const pmiPayoffRow = document.querySelector('#pmi-payoff-row');
+  if (pmiPayoffRow) pmiPayoffRow.style.display = hasPmi ? '' : 'none';
   const pmiPayoffEntry = pmiPayoffMonth > 0 ? schedule[pmiPayoffMonth - 1] : null;
   if (pmiPayoffEntry) {
     const MONTHS = ['Jan.','Feb.','Mar.','Apr.','May','Jun.','Jul.','Aug.','Sep.','Oct.','Nov.','Dec.'];
-    setVal('result-pmi-payoff-date', MONTHS[pmiPayoffEntry.dateMonth - 1] + ' ' + pmiPayoffEntry.dateYear + ' (' + pmiPaymentCount + ' payments)');
+    setVal('result-pmi-payoff-date', MONTHS[pmiPayoffEntry.dateMonth - 1] + ' ' + pmiPayoffEntry.dateYear);
   }
 
   // Extra payment savings section
