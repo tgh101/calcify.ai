@@ -471,6 +471,7 @@ function generatePieChartData(totalCosts) {
     { label: 'Principal & Interest', value: totalCosts.mortgage    || 0 },
     { label: 'Property Taxes',       value: totalCosts.propertyTax || 0 },
     { label: 'Home Insurance',       value: totalCosts.homeIns     || 0 },
+    { label: 'PMI Insurance',       value: totalCosts.pmi         || 0 },
     { label: 'HOA Fee',              value: totalCosts.hoa         || 0 },
     { label: 'Other Cost',           value: totalCosts.other       || 0 },
   ];
@@ -1252,6 +1253,7 @@ function calculateMortgage() {
       mortgage:    costData.total.mortgage,
       propertyTax: costData.total.propertyTax,
       homeIns:     costData.total.homeIns,
+      pmi:         costData.total.pmi,
       hoa:         costData.total.hoa,
       other:       costData.total.other,
     });
