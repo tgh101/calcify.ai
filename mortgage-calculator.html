@@ -286,7 +286,7 @@
                   </tr>
                   <tr>
                     <td align="right">Start Date</td>
-                    <td align="left" colspan="2">
+                    <td align="right" colspan="2">
                       <select name="cstartmonth" id="cstartmonth">
                         <option value="1">Jan</option>
                         <option value="2">Feb</option>
@@ -532,7 +532,7 @@
                   <table class="results-table">
                     <tr class="gray-row bold-row"><td colspan="2"><b>Biweekly Payback Results (without extra payment)</b></td><td></td></tr>
                     <tr><td colspan="2">Biweekly Payment</td><td align="right"><span id="biweekly-payment">$1,016.05</span></td></tr>
-                    <tr><td colspan="2">Payoff in approx.</td><td align="right"><span id="biweekly-years">14</span> years</td></tr>
+                    <tr><td colspan="2">Payoff in approx.</td><td align="right"><span id="biweekly-years">14</span></td></tr>
                     <tr><td colspan="2">Total Biweekly Payments</td><td align="right"><span id="biweekly-total">$0.00</span></td></tr>
                     <tr><td colspan="2">Interest Savings vs. Standard</td><td align="right" style="color:#388e3c;"><span id="biweekly-savings">$0.00</span></td></tr>
                   </table>
@@ -540,6 +540,7 @@
 
                 <!-- Interest Saved table -->
                 <table class="results-table" id="interest-saved-table" style="display:none;">
+                  <tr><td>&nbsp;</td><td align="right"><b>Monthly</b></td><td align="right"><b>Total</b></td></tr>
                   <tr class="gray-row bold-row"><td colspan="2"><b>Interest to be Saved</b></td><td></td></tr>
                   <tr><td>With the extra payment(s)</td><td align="right"><span id="saved-extra">$0.00</span></td></tr>
                   <tr><td>With Biweekly Payment Only<br><small>(without Extra Payments)</small></td><td align="right"><span id="saved-biweekly">$0.00</span></td></tr>
@@ -549,7 +550,7 @@
           </div>
 
           <!-- Amortization Schedule (table left, chart right) -->
-          <h2 style="padding-bottom:10px;">Amortization schedule</h2>
+          <h2 style="padding:20px 0 10px;">Amortization schedule</h2>
           <div class="amortization-layout">
             <div>
               <div id="amoselect" style="padding-bottom:5px;font-weight:bold;font-size:14px;">

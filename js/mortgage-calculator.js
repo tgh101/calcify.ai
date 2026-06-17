@@ -691,9 +691,9 @@ function renderLineChart(container, schedule, termYears, width, height) {
 
   let legY = padding.top + 5;
   lines.forEach(lineInfo => {
-    svg += '<rect x="' + (padding.left + 5) + '" y="' + legY + '" width="16" height="6" style="fill:' + lineInfo.color + ';"></rect>';
-    svg += '<text x="' + (padding.left + 27) + '" y="' + (legY + 7) + '" class="mcllegend">' + lineInfo.label + '</text>';
-    legY += 20;
+    svg += '<rect x="' + (padding.left + 5) + '" y="' + legY + '" width="16" height="5" style="fill:' + lineInfo.color + ';"></rect>';
+    svg += '<text x="' + (padding.left + 27) + '" y="' + (legY + 6) + '" class="mcllegend" font-size="10">' + lineInfo.label + '</text>';
+    legY += 16;
   });
 
   svg += '</svg>';
@@ -1211,14 +1211,14 @@ function calculateMortgage() {
   const hasExtraPayments  = extraPayments.monthly > 0 || extraPayments.yearly > 0 || extraPayments.oneTime.length > 0;
 
   if (hasExtraPayments) {
-    const savedMonths   = baseSchedule.length - schedule.length;
-    const savedYears    = Math.floor(Math.abs(savedMonths) / 12);
-    const savedRemMo    = Math.abs(savedMonths) % 12;
+    const savedMonths = baseSchedule.length - schedule.length;
 
     if (extraPaymentInfo && extraPaymentText) {
+      const actualYears = Math.floor(schedule.length / 12);
+      const actualMonths = schedule.length % 12;
       extraPaymentInfo.style.display = 'block';
       extraPaymentText.innerHTML = 'With the extra payment(s), the loan will be paid off in <b>'
-        + savedYears + ' years and ' + savedRemMo + ' months earlier</b>, saving <b>'
+        + actualYears + ' years and ' + actualMonths + ' months</b>, saving <b>'
         + formatCurrency(interestSavedByExtras) + ' in interest</b>.';
     }
     if (interestSavedTable) {
