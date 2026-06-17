@@ -1253,7 +1253,7 @@ function calculateMortgage() {
       mortgage:    costData.total.mortgage,
       propertyTax: costData.total.propertyTax,
       homeIns:     costData.total.homeIns,
-      pmi:         costData.total.pmi,
+      pmi:         hasPmi ? costData.total.pmi : 0,
       hoa:         costData.total.hoa,
       other:       costData.total.other,
     });
