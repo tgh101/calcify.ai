@@ -150,7 +150,7 @@ input, select, textarea {
   z-index: 1;
 }
 .unit-prefix {
-  left: 0px;
+  left: -1px;
 }
 .unit-suffix {
   right: 6px;
