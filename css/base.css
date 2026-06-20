@@ -150,11 +150,11 @@ input, select, textarea {
   z-index: 1;
 }
 .unit-prefix {
-  left: 6px;
+  left: 0px;
 }
 .unit-suffix {
   right: 6px;
 }
 /* Adjust input padding so text doesn't overlap unit symbol */
-.panel .input-unit-wrapper .indollar { padding-left: 12px; }
+.panel .input-unit-wrapper .indollar { padding-left: 2px; }
 .panel .input-unit-wrapper .inpct { padding-right: 22px; }
