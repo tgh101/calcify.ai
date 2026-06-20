@@ -156,6 +156,6 @@ input, select, textarea {
   right: 6px;
 }
 /* Adjust input padding so text doesn't overlap unit symbol */
-.input-unit-wrapper .indollar { padding-left: 20px; }
-.input-unit-wrapper .inpct { padding-right: 22px; }
-.input-unit-wrapper .inhalf { padding-left: 20px; } /* for $ prefix fields */
+.panel .input-unit-wrapper .indollar { padding-left: 20px; }
+.panel .input-unit-wrapper .inpct { padding-right: 22px; }
+.panel .input-unit-wrapper .inhalf { padding-left: 20px; } /* for $ prefix fields */
