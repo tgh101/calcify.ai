@@ -39,6 +39,8 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Input field unit symbols CSS positioning to prevent text overlap with symbols
 - Downpayment field unit symbols now initialize correctly when page loads
 - Fixed initial HTML display state of unit symbols to match selector defaults (cpropertytaxes, chomeins, cpmi, choa, cothercost)
+- Widen Home Price input width from 75px to 110px so 1,000,000 fits without hiding digits
+- Remove .inhalf { padding-left: 20px } rule so % fields keep value flush left inside input box
 
 ### Changed
 - All calculator form input fields now left-aligned (was right-aligned)

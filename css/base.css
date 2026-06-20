@@ -158,4 +158,3 @@ input, select, textarea {
 /* Adjust input padding so text doesn't overlap unit symbol */
 .panel .input-unit-wrapper .indollar { padding-left: 20px; }
 .panel .input-unit-wrapper .inpct { padding-right: 22px; }
-.panel .input-unit-wrapper .inhalf { padding-left: 20px; } /* for $ prefix fields */
