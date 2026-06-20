@@ -38,6 +38,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Removed "Annual Tax & Cost" header text below "Include Taxes & Costs Below" checkbox
 - Input field unit symbols CSS positioning to prevent text overlap with symbols
 - Downpayment field unit symbols now initialize correctly when page loads
+- Fixed initial HTML display state of unit symbols to match selector defaults (cpropertytaxes, chomeins, cpmi, choa, cothercost)
 
 ### Changed
 - All calculator form input fields now left-aligned (was right-aligned)
