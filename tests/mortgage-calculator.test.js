@@ -7,7 +7,7 @@
 const {
   calculateMonthlyPayment,
   buildAmortizationSchedule,
-  calculateBiweeklyPayment,
+  calculateBiweeklySchedule,
   formatCurrency,
   computeTotalCosts,
   generatePieChartData,
@@ -91,10 +91,14 @@ describe('buildAmortizationSchedule', () => {
   });
 });
 
-describe('calculateBiweeklyPayment', () => {
+describe('calculateBiweeklySchedule', () => {
   it('returns half the monthly payment', () => {
-    expect(calculateBiweeklyPayment(2000)).toBe(1000);
-    expect(calculateBiweeklyPayment(2032.10)).toBeCloseTo(1016.05, 1);
+    // Test the payment amount (should be half of monthlyPI)
+    const result1 = calculateBiweeklySchedule(300000, 0.065, 2000);
+    expect(result1.payment).toBe(1000);
+
+    const result2 = calculateBiweeklySchedule(300000, 0.065, 2032.10);
+    expect(result2.payment).toBeCloseTo(1016.05, 1);
   });
 });
 

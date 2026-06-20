@@ -837,6 +837,12 @@ function proComma2(id) {
 function cunitchange(fieldId, newUnit) {
   const field    = document.getElementById(fieldId);
   if (!field) return;
+
+  // Find the unit prefix and suffix spans within the input's wrapper
+  const wrapper = field.closest('.input-unit-wrapper');
+  const prefix  = wrapper ? wrapper.querySelector('.unit-prefix') : null;
+  const suffix  = wrapper ? wrapper.querySelector('.unit-suffix') : null;
+
   const priceEl  = document.getElementById('chouseprice');
   const homePrice = parseFloat((priceEl ? priceEl.value : '400000').replace(/,/g, ''));
   const fieldVal  = parseFloat(field.value.replace(/,/g, ''));
@@ -846,14 +852,20 @@ function cunitchange(fieldId, newUnit) {
       field.value = Math.round((homePrice * fieldVal) / 100);
       field.classList.remove('inpct');
       field.classList.add('indollar');
+      if (prefix) prefix.style.display = 'block';
+      if (suffix) suffix.style.display = 'none';
     } else if (newUnit === 'p') {
       field.value = Math.round((100000.0 * fieldVal) / homePrice) / 1000;
       field.classList.remove('indollar');
       field.classList.add('inpct');
+      if (prefix) prefix.style.display = 'none';
+      if (suffix) suffix.style.display = 'block';
     }
   } else {
     field.classList.toggle('inpct',    newUnit === 'p');
     field.classList.toggle('indollar', newUnit === 'd');
+    if (prefix) prefix.style.display = newUnit === 'd' ? 'block' : 'none';
+    if (suffix) suffix.style.display = newUnit === 'p' ? 'block' : 'none';
   }
   insertComma2(field, 'd');
 }

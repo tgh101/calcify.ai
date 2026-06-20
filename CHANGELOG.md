@@ -11,6 +11,10 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Mortgage calculator logic (`js/mortgage-calculator.js`) with 10 exported pure functions: calculateMonthlyPayment, buildAmortizationSchedule, calculateBiweeklyPayment, formatCurrency, computeTotalCosts, generatePieChartData, buildAnnualTableHTML, buildMonthlyTableHTML, insertComma2, proComma2, cunitchange
 - Unit tests for mortgage calculator (`tests/mortgage-calculator.test.js`) — 24 tests covering 7 modules
 - Box-shadow effect on all calculator form input fields and select boxes
+- Input field unit symbols: permanent $ and % indicators inside input fields for better UX
+
+### Changed
+- Input field unit symbols now toggle visibility when user changes between $ and % units
 
 ### Changed
 - Result table now conditionally displays Annual Tax & Cost parameters only when values are non-zero

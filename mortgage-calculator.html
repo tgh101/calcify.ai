@@ -86,6 +86,36 @@
     }
     .panel .cbcontainer input { margin-right: 4px; }
 
+    /* ── Input unit symbols ────────────────────────────────────── */
+    .input-unit-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+    .unit-prefix {
+      position: absolute;
+      left: 6px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 14px;
+      color: #555;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .unit-suffix {
+      position: absolute;
+      right: 6px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 14px;
+      color: #555;
+      pointer-events: none;
+      z-index: 1;
+    }
+    /* Adjust input padding so text doesn't overlap unit symbol */
+    .input-unit-wrapper .indollar { padding-left: 20px; }
+    .input-unit-wrapper .inpct { padding-right: 22px; }
+    .input-unit-wrapper .inhalf { padding-left: 20px; } /* for $ prefix fields */
+
     /* ── Calculator layout: equal columns ──────────────────────── */
     .calculator-layout {
       display: grid;
@@ -311,7 +341,12 @@
                 <table>
                   <tr>
                     <td align="right">Home Price</td>
-                    <td align="right"><input type="text" name="chouseprice" id="chouseprice" value="400,000" class="inhalf indollar"></td>
+                    <td align="right">
+                      <span class="input-unit-wrapper">
+                        <span class="unit-prefix">$</span>
+                        <input type="text" name="chouseprice" id="chouseprice" value="400,000" class="inhalf indollar">
+                      </span>
+                    </td>
                     <td>&nbsp;</td>
                   </tr>
                    <tr>
@@ -321,7 +356,13 @@
                          <img class="ttimg" alt="?" src="img/svg/help.svg" title="The upfront payment of the purchase, usually a percentage of the total price. Typically, mortgage lenders want the borrower to put 20% or more as a down payment. If the borrowers make a down payment of less than 20%, they will normally be required to pay private mortgage insurance (PMI).">
                        </label>
                      </td>
-                     <td align="right"><input type="text" name="cdownpayment" id="cdownpayment" value="20" class="inhalf inpct"></td>
+                     <td align="right">
+                       <span class="input-unit-wrapper">
+                         <span class="unit-prefix">$</span>
+                         <input type="text" name="cdownpayment" id="cdownpayment" value="20" class="inhalf inpct">
+                         <span class="unit-suffix" style="display:none;">%</span>
+                       </span>
+                     </td>
                      <td>
                        <select name="cdownpaymentunit" id="cdownpaymentunit" onchange="cunitchange('cdownpayment', this.value);">
                          <option value="p" selected>%</option>
@@ -346,7 +387,12 @@
                         <img class="ttimg" alt="?" src="img/svg/help.svg" title="The percentage of the loan charged as a cost of borrowing.">
                       </label>
                     </td>
-                    <td align="right"><input type="text" name="cinterestrate" id="cinterestrate" value="6.545" class="inhalf inpct"></td>
+                    <td align="right">
+                      <span class="input-unit-wrapper">
+                        <input type="text" name="cinterestrate" id="cinterestrate" value="6.545" class="inhalf inpct">
+                        <span class="unit-suffix">%</span>
+                      </span>
+                    </td>
                     <td>&nbsp;</td>
                   </tr>
                   <tr>
@@ -388,7 +434,13 @@
                                 <img class="ttimg" alt="?" src="img/svg/help.svg" title="A tax that property owners pay to governing authorities. In the U.S., property tax is usually managed by municipal or county governments. The annual real estate tax in the U.S. varies by location; on average, Americans pay about 1.1% of their property's value as property tax each year.">
                               </label>
                             </td>
-                            <td align="right"><input type="text" name="cpropertytaxes" id="cpropertytaxes" value="1.2" class="innormal inpct"></td>
+                            <td align="right">
+                              <span class="input-unit-wrapper">
+                                <span class="unit-prefix">$</span>
+                                <input type="text" name="cpropertytaxes" id="cpropertytaxes" value="1.2" class="innormal inpct">
+                                <span class="unit-suffix" style="display:none;">%</span>
+                              </span>
+                            </td>
                             <td>
                               <select name="cpropertytaxesunit" id="cpropertytaxesunit" onchange="cunitchange('cpropertytaxes', this.value);">
                                 <option value="p" selected>%</option>
@@ -403,7 +455,13 @@
                                 <img class="ttimg" alt="?" src="img/svg/help.svg" title="An insurance policy that protects the owner from accidents that may happen to their real estate properties. The cost of home insurance varies according to factors such as location, condition of the property, and the coverage amount.">
                               </label>
                             </td>
-                            <td align="right"><input type="text" name="chomeins" id="chomeins" value="1,500" class="innormal indollar"></td>
+                            <td align="right">
+                              <span class="input-unit-wrapper">
+                                <span class="unit-prefix" style="display:none;">$</span>
+                                <input type="text" name="chomeins" id="chomeins" value="1,500" class="innormal indollar">
+                                <span class="unit-suffix">%</span>
+                              </span>
+                            </td>
                             <td>
                               <select name="chomeinsunit" id="chomeinsunit" onchange="cunitchange('chomeins', this.value);">
                                 <option value="p">%</option>
@@ -418,7 +476,13 @@
                                 <img class="ttimg" alt="?" src="img/svg/help.svg" title="Private mortgage insurance (PMI) protects the mortgage lender if the borrower is unable to repay the loan. If the down payment is less than 20% of the property's value, the lender will normally require the borrower to purchase PMI. The annual cost typically ranges from 0.3% to 1.9% of the loan amount.">
                               </label>
                             </td>
-                            <td align="right"><input type="text" name="cpmi" id="cpmi" value="0" class="innormal indollar"></td>
+                            <td align="right">
+                              <span class="input-unit-wrapper">
+                                <span class="unit-prefix" style="display:none;">$</span>
+                                <input type="text" name="cpmi" id="cpmi" value="0" class="innormal indollar">
+                                <span class="unit-suffix">%</span>
+                              </span>
+                            </td>
                             <td>
                               <select name="cpmiunit" id="cpmiunit" onchange="cunitchange('cpmi', this.value);">
                                 <option value="p">%</option>
@@ -433,7 +497,13 @@
                                 <img class="ttimg" alt="?" src="img/svg/help.svg" title="A fee imposed on the property owner by a homeowner's association (HOA). Condominiums, townhomes, and some single-family homes commonly require the payment of HOA fees. Annual HOA fees usually amount to less than one percent of the property value.">
                               </label>
                             </td>
-                            <td align="right"><input type="text" name="choa" id="choa" value="0" class="innormal indollar"></td>
+                            <td align="right">
+                              <span class="input-unit-wrapper">
+                                <span class="unit-prefix" style="display:none;">$</span>
+                                <input type="text" name="choa" id="choa" value="0" class="innormal indollar">
+                                <span class="unit-suffix">%</span>
+                              </span>
+                            </td>
                             <td>
                               <select name="choaunit" id="choaunit" onchange="cunitchange('choa', this.value);">
                                 <option value="p">%</option>
@@ -448,7 +518,13 @@
                                 <img class="ttimg" alt="?" src="img/svg/help.svg" title="Such as utilities, home maintenance costs, and anything pertaining to the general upkeep of the property. It is common to spend 1% or more of the property value on annual maintenance alone.">
                               </label>
                             </td>
-                            <td align="right"><input type="text" name="cothercost" id="cothercost" value="4,000" class="innormal indollar"></td>
+                            <td align="right">
+                              <span class="input-unit-wrapper">
+                                <span class="unit-prefix" style="display:none;">$</span>
+                                <input type="text" name="cothercost" id="cothercost" value="4,000" class="innormal indollar">
+                                <span class="unit-suffix">%</span>
+                              </span>
+                            </td>
                             <td>
                               <select name="cothercostunit" id="cothercostunit" onchange="cunitchange('cothercost', this.value);">
                                 <option value="p">%</option>
@@ -465,15 +541,38 @@
 
                         <table id="cmoreoptioninputs" style="display:none;">
                           <tr><td colspan="2" style="padding-top:5px;font-weight:bold;text-align:left;font-size:14px;">Annual Tax & Cost Increase</td></tr>
-                          <tr><td style="padding-left:10px;text-align:left;font-size:13px;">Property Taxes Increase</td><td><input type="text" name="cptinc" id="cptinc" value="0" class="in4char inpct"></td></tr>
-                          <tr><td style="padding-left:10px;text-align:left;font-size:13px;">Home Insurance Increase</td><td><input type="text" name="chiinc" id="chiinc" value="0" class="in4char inpct"></td></tr>
-                          <tr><td style="padding-left:10px;text-align:left;font-size:13px;">HOA Fee Increase</td><td><input type="text" name="choainc" id="choainc" value="0" class="in4char inpct"></td></tr>
-                          <tr><td style="padding-left:10px;text-align:left;font-size:13px;">Other Costs Increase</td><td><input type="text" name="cocinc" id="cocinc" value="0" class="in4char inpct"></td></tr>
+                          <tr><td style="padding-left:10px;text-align:left;font-size:13px;">Property Taxes Increase</td><td>
+                            <span class="input-unit-wrapper">
+                              <input type="text" name="cptinc" id="cptinc" value="0" class="in4char inpct">
+                              <span class="unit-suffix">%</span>
+                            </span>
+                          </td></tr>
+                          <tr><td style="padding-left:10px;text-align:left;font-size:13px;">Home Insurance Increase</td><td>
+                            <span class="input-unit-wrapper">
+                              <input type="text" name="chiinc" id="chiinc" value="0" class="in4char inpct">
+                              <span class="unit-suffix">%</span>
+                            </span>
+                          </td></tr>
+                          <tr><td style="padding-left:10px;text-align:left;font-size:13px;">HOA Fee Increase</td><td>
+                            <span class="input-unit-wrapper">
+                              <input type="text" name="choainc" id="choainc" value="0" class="in4char inpct">
+                              <span class="unit-suffix">%</span>
+                            </span>
+                          </td></tr>
+                          <tr><td style="padding-left:10px;text-align:left;font-size:13px;">Other Costs Increase</td><td>
+                            <span class="input-unit-wrapper">
+                              <input type="text" name="cocinc" id="cocinc" value="0" class="in4char inpct">
+                              <span class="unit-suffix">%</span>
+                            </span>
+                          </td></tr>
                           <tr><td colspan="3" style="padding:10px 0 3px;font-weight:bold;text-align:left;font-size:14px;">Extra Payments</td></tr>
                           <tr>
                             <td colspan="3" style="padding-left:10px;text-align:left;font-size:13px;">Extra Monthly Pay
                               <div style="padding-bottom:5px;">
-                                <input type="text" name="cexma" id="cexma" value="0" class="innormal indollar">
+                                <span class="input-unit-wrapper">
+                                  <span class="unit-prefix">$</span>
+                                  <input type="text" name="cexma" id="cexma" value="0" class="innormal indollar">
+                                </span>
                                 from <select name="cexmsm" id="cexmsm">
                                   <option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option><option value="4">Apr</option><option value="5">May</option><option value="6" selected>Jun</option><option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option><option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option>
                                 </select>
@@ -484,7 +583,10 @@
                           <tr>
                             <td colspan="2" style="padding-left:10px;text-align:left;font-size:13px;">Extra Yearly Pay
                               <div style="padding-bottom:5px;">
-                                <input type="text" name="cexya" id="cexya" value="0" class="innormal indollar">
+                                <span class="input-unit-wrapper">
+                                  <span class="unit-prefix">$</span>
+                                  <input type="text" name="cexya" id="cexya" value="0" class="innormal indollar">
+                                </span>
                                 from <select name="cexysm" id="cexysm">
                                   <option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option><option value="4">Apr</option><option value="5">May</option><option value="6" selected>Jun</option><option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option><option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option>
                                 </select>
@@ -495,7 +597,10 @@
                           <tr>
                             <td colspan="2" style="padding-left:10px;text-align:left;font-size:13px;">Extra One-time Pay
                               <div>
-                                <input type="text" name="cexoa" id="cexoa" value="0" class="innormal indollar">
+                                <span class="input-unit-wrapper">
+                                  <span class="unit-prefix">$</span>
+                                  <input type="text" name="cexoa" id="cexoa" value="0" class="innormal indollar">
+                                </span>
                                 in <select name="cexosm" id="cexosm">
                                   <option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option><option value="4">Apr</option><option value="5">May</option><option value="6" selected>Jun</option><option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option><option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option>
                                 </select>
@@ -506,16 +611,46 @@
                               </div>
                               <div id="cadditionalonetimediv" style="display:none;padding:5px 0;">
                                 <input type="hidden" name="caot" id="cadditionalonetime" value="0">
-                                <input type="text" name="xa1" id="xa1" value="0" class="innormal indollar"> in <select name="xm1" id="xm1"><option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option><option value="4">Apr</option><option value="5">May</option><option value="6" selected>Jun</option><option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option><option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option></select> <input type="text" name="xy1" id="xy1" value="2026" class="in4char"><br>
-                                <input type="text" name="xa2" id="xa2" value="0" class="innormal indollar"> in <select name="xm2" id="xm2"><option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option><option value="4">Apr</option><option value="5">May</option><option value="6" selected>Jun</option><option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option><option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option></select> <input type="text" name="xy2" id="xy2" value="2026" class="in4char"><br>
-                                <input type="text" name="xa3" id="xa3" value="0" class="innormal indollar"> in <select name="xm3" id="xm3"><option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option><option value="4">Apr</option><option value="5">May</option><option value="6" selected>Jun</option><option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option><option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option></select> <input type="text" name="xy3" id="xy3" value="2026" class="in4char"><br>
-                                <input type="text" name="xa4" id="xa4" value="0" class="innormal indollar"> in <select name="xm4" id="xm4"><option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option><option value="4">Apr</option><option value="5">May</option><option value="6" selected>Jun</option><option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option><option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option></select> <input type="text" name="xy4" id="xy4" value="2026" class="in4char"><br>
-                                <input type="text" name="xa5" id="xa5" value="0" class="innormal indollar"> in <select name="xm5" id="xm5"><option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option><option value="4">Apr</option><option value="5">May</option><option value="6" selected>Jun</option><option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option><option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option></select> <input type="text" name="xy5" id="xy5" value="2026" class="in4char"><br>
-                                <input type="text" name="xa6" id="xa6" value="0" class="innormal indollar"> in <select name="xm6" id="xm6"><option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option><option value="4">Apr</option><option value="5">May</option><option value="6" selected>Jun</option><option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option><option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option></select> <input type="text" name="xy6" id="xy6" value="2026" class="in4char"><br>
-                                <input type="text" name="xa7" id="xa7" value="0" class="innormal indollar"> in <select name="xm7" id="xm7"><option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option><option value="4">Apr</option><option value="5">May</option><option value="6" selected>Jun</option><option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option><option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option></select> <input type="text" name="xy7" id="xy7" value="2026" class="in4char"><br>
-                                <input type="text" name="xa8" id="xa8" value="0" class="innormal indollar"> in <select name="xm8" id="xm8"><option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option><option value="4">Apr</option><option value="5">May</option><option value="6" selected>Jun</option><option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option><option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option></select> <input type="text" name="xy8" id="xy8" value="2026" class="in4char"><br>
-                                <input type="text" name="xa9" id="xa9" value="0" class="innormal indollar"> in <select name="xm9" id="xm9"><option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option><option value="4">Apr</option><option value="5">May</option><option value="6" selected>Jun</option><option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option><option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option></select> <input type="text" name="xy9" id="xy9" value="2026" class="in4char"><br>
-                                <input type="text" name="xa10" id="xa10" value="0" class="innormal indollar"> in <select name="xm10" id="xm10"><option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option><option value="4">Apr</option><option value="5">May</option><option value="6" selected>Jun</option><option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option><option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option></select> <input type="text" name="xy10" id="xy10" value="2026" class="in4char"><br>
+                                <span class="input-unit-wrapper">
+                                  <span class="unit-prefix">$</span>
+                                  <input type="text" name="xa1" id="xa1" value="0" class="innormal indollar">
+                                </span> in <select name="xm1" id="xm1"><option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option><option value="4">Apr</option><option value="5">May</option><option value="6" selected>Jun</option><option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option><option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option></select> <input type="text" name="xy1" id="xy1" value="2026" class="in4char"><br>
+                                <span class="input-unit-wrapper">
+                                  <span class="unit-prefix">$</span>
+                                  <input type="text" name="xa2" id="xa2" value="0" class="innormal indollar">
+                                </span> in <select name="xm2" id="xm2"><option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option><option value="4">Apr</option><option value="5">May</option><option value="6" selected>Jun</option><option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option><option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option></select> <input type="text" name="xy2" id="xy2" value="2026" class="in4char"><br>
+                                <span class="input-unit-wrapper">
+                                  <span class="unit-prefix">$</span>
+                                  <input type="text" name="xa3" id="xa3" value="0" class="innormal indollar">
+                                </span> in <select name="xm3" id="xm3"><option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option><option value="4">Apr</option><option value="5">May</option><option value="6" selected>Jun</option><option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option><option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option></select> <input type="text" name="xy3" id="xy3" value="2026" class="in4char"><br>
+                                <span class="input-unit-wrapper">
+                                  <span class="unit-prefix">$</span>
+                                  <input type="text" name="xa4" id="xa4" value="0" class="innormal indollar">
+                                </span> in <select name="xm4" id="xm4"><option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option><option value="4">Apr</option><option value="5">May</option><option value="6" selected>Jun</option><option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option><option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option></select> <input type="text" name="xy4" id="xy4" value="2026" class="in4char"><br>
+                                <span class="input-unit-wrapper">
+                                  <span class="unit-prefix">$</span>
+                                  <input type="text" name="xa5" id="xa5" value="0" class="innormal indollar">
+                                </span> in <select name="xm5" id="xm5"><option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option><option value="4">Apr</option><option value="5">May</option><option value="6" selected>Jun</option><option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option><option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option></select> <input type="text" name="xy5" id="xy5" value="2026" class="in4char"><br>
+                                <span class="input-unit-wrapper">
+                                  <span class="unit-prefix">$</span>
+                                  <input type="text" name="xa6" id="xa6" value="0" class="innormal indollar">
+                                </span> in <select name="xm6" id="xm6"><option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option><option value="4">Apr</option><option value="5">May</option><option value="6" selected>Jun</option><option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option><option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option></select> <input type="text" name="xy6" id="xy6" value="2026" class="in4char"><br>
+                                <span class="input-unit-wrapper">
+                                  <span class="unit-prefix">$</span>
+                                  <input type="text" name="xa7" id="xa7" value="0" class="innormal indollar">
+                                </span> in <select name="xm7" id="xm7"><option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option><option value="4">Apr</option><option value="5">May</option><option value="6" selected>Jun</option><option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option><option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option></select> <input type="text" name="xy7" id="xy7" value="2026" class="in4char"><br>
+                                <span class="input-unit-wrapper">
+                                  <span class="unit-prefix">$</span>
+                                  <input type="text" name="xa8" id="xa8" value="0" class="innormal indollar">
+                                </span> in <select name="xm8" id="xm8"><option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option><option value="4">Apr</option><option value="5">May</option><option value="6" selected>Jun</option><option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option><option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option></select> <input type="text" name="xy8" id="xy8" value="2026" class="in4char"><br>
+                                <span class="input-unit-wrapper">
+                                  <span class="unit-prefix">$</span>
+                                  <input type="text" name="xa9" id="xa9" value="0" class="innormal indollar">
+                                </span> in <select name="xm9" id="xm9"><option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option><option value="4">Apr</option><option value="5">May</option><option value="6" selected>Jun</option><option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option><option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option></select> <input type="text" name="xy9" id="xy9" value="2026" class="in4char"><br>
+                                <span class="input-unit-wrapper">
+                                  <span class="unit-prefix">$</span>
+                                  <input type="text" name="xa10" id="xa10" value="0" class="innormal indollar">
+                                </span> in <select name="xm10" id="xm10"><option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option><option value="4">Apr</option><option value="5">May</option><option value="6" selected>Jun</option><option value="7">Jul</option><option value="8">Aug</option><option value="9">Sep</option><option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option></select> <input type="text" name="xy10" id="xy10" value="2026" class="in4char"><br>
                               </div>
                             </td>
                           </tr>
@@ -864,7 +999,7 @@
               <b>Example:</b> Required payment $2,000/month, actual payment $2,300/month. The extra $300 reduces principal faster and can shorten the repayment period significantly.</li>
 
               <li><b>Switch to Biweekly Payments</b> — Instead of making one monthly payment, the borrower pays half the monthly amount every two weeks. Since there are 52 weeks in a year, the borrower makes 26 half-payments, equivalent to 13 monthly payments annually instead of 12.<br>
-              <b>Example:</b> Monthly payment $2,400 &div; 2 = $1,200 every two weeks. This extra payment helps reduce the loan balance faster.</li>
+              <b>Example:</b> Monthly payment $2,400 &divide; 2 = $1,200 every two weeks. This extra payment helps reduce the loan balance faster.</li>
 
               <li><b>Refinance Into a Shorter Loan</b> — Refinancing replaces an existing mortgage with a new one. A borrower may refinance from 30 years to 20 years, or 30 years to 15 years.<br>
               <b>Potential benefits include:</b> lower interest rate, faster payoff, reduced lifetime interest.<br>
