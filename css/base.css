@@ -135,3 +135,27 @@ input, select, textarea {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
+
+/* ── Input unit symbols ───────────────────────────────────────────── */
+.input-unit-wrapper {
+  position: relative;
+  display: inline-block;
+}
+.unit-prefix, .unit-suffix {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #555;
+  pointer-events: none;
+  z-index: 1;
+}
+.unit-prefix {
+  left: 6px;
+}
+.unit-suffix {
+  right: 6px;
+}
+/* Adjust input padding so text doesn't overlap unit symbol */
+.input-unit-wrapper .indollar { padding-left: 20px; }
+.input-unit-wrapper .inpct { padding-right: 22px; }
+.input-unit-wrapper .inhalf { padding-left: 20px; } /* for $ prefix fields */

@@ -1331,6 +1331,12 @@ function initMortgageCalculator() {
   ];
   numberIds.forEach(id => proComma2(id));
 
+  // Initialize unit symbols for downpayment field
+  const downpaymentUnit = document.getElementById('cdownpaymentunit');
+  if (downpaymentUnit) {
+    cunitchange('cdownpayment', downpaymentUnit.value);
+  }
+
   cshtaxcost();
   cshmoreoption(0);
   cshadditionalonetime(0);

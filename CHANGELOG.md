@@ -15,8 +15,6 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ### Changed
 - Input field unit symbols now toggle visibility when user changes between $ and % units
-
-### Changed
 - Result table now conditionally displays Annual Tax & Cost parameters only when values are non-zero
 - Extra payment information now appears in the table when user sets positive values
 - Added conditional display logic for result table rows based on non-zero values
@@ -38,6 +36,8 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Pie chart now shows all percentage labels (including small slices)
 - Pie chart legend font size increased to 14px
 - Removed "Annual Tax & Cost" header text below "Include Taxes & Costs Below" checkbox
+- Input field unit symbols CSS positioning to prevent text overlap with symbols
+- Downpayment field unit symbols now initialize correctly when page loads
 
 ### Changed
 - All calculator form input fields now left-aligned (was right-aligned)
