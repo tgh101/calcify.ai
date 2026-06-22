@@ -43,7 +43,8 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Widen Home Price input width from 75px to 110px so 1,000,000 fits without hiding digits
 - Remove .inhalf { padding-left: 20px } rule so % fields keep value flush left inside input box
 - Reduce .indollar padding-left from 20px to 2px and move .unit-prefix from left: 6px to left: 1px so $ symbol sits 1px from input border with 2px gap to first digit
-- Start Date month `<select>` misaligned with other row inputs — merged columns 2+3 with `colspan="2"` and wrapped month+year in a 110px `.input-unit-wrapper` so month select left edge aligns with Home Price / Interest Rate inputs
+- Start Date month `<select>` misaligned with other row inputs — wrapped month+year in a 110px `.input-unit-wrapper` inside column 2 so month select left edge aligns with Home Price / Interest Rate inputs
+- Down payment default value corrupted from 20% to 0.005% on page load — replaced `cunitchange('cdownpayment', ...)` init call with direct symbol/class toggling that doesn't recalculate the field value
 
 ### Changed
 - All calculator form input fields now left-aligned (was right-aligned)

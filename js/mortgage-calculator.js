@@ -1331,10 +1331,28 @@ function initMortgageCalculator() {
   ];
   numberIds.forEach(id => proComma2(id));
 
-  // Initialize unit symbols for downpayment field
+  // Initialize unit symbols for downpayment field without recalculating its value
   const downpaymentUnit = document.getElementById('cdownpaymentunit');
   if (downpaymentUnit) {
-    cunitchange('cdownpayment', downpaymentUnit.value);
+    const downField = document.getElementById('cdownpayment');
+    const downWrapper = downField ? downField.closest('.input-unit-wrapper') : null;
+    const downPrefix = downWrapper ? downWrapper.querySelector('.unit-prefix') : null;
+    const downSuffix = downWrapper ? downWrapper.querySelector('.unit-suffix') : null;
+    if (downpaymentUnit.value === 'd') {
+      if (downPrefix) { downPrefix.style.display = 'block'; }
+      if (downSuffix) { downSuffix.style.display = 'none'; }
+      if (downField) {
+        downField.classList.remove('inpct');
+        downField.classList.add('indollar');
+      }
+    } else {
+      if (downPrefix) { downPrefix.style.display = 'none'; }
+      if (downSuffix) { downSuffix.style.display = 'block'; }
+      if (downField) {
+        downField.classList.remove('indollar');
+        downField.classList.add('inpct');
+      }
+    }
   }
 
   cshtaxcost();
