@@ -133,6 +133,12 @@
       .panel .input-unit-wrapper .inpct {
         padding-right: 22px;
       }
+      .panel .input-unit-wrapper .years-input {
+        padding-right: 45px;
+      }
+      .panel .input-unit-wrapper .months-input {
+        padding-right: 55px;
+      }
       .calculator-layout {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -243,10 +249,14 @@
                         </label>
                       </td>
                       <td align="right">
-                        <input type="text" name="caloan-term-years" id="caloan-term-years" value="15" class="inhalf" style="width: 50px;" />
-                        <span style="margin: 0 5px;">years</span>
-                        <input type="text" name="caloan-term-months" id="caloan-term-months" value="0" class="in4char" style="width: 50px;" />
-                        <span style="margin-left: 5px;">months</span>
+                        <span class="input-unit-wrapper">
+                          <input type="text" name="caloan-term-years" id="caloan-term-years" value="15" class="inhalf years-input" style="width: 70px; text-align: left;" />
+                          <span class="unit-suffix">years</span>
+                        </span>
+                        <span class="input-unit-wrapper" style="margin-left: 10px;">
+                          <input type="text" name="caloan-term-months" id="caloan-term-months" value="0" class="in4char months-input" style="width: 70px; text-align: left;" />
+                          <span class="unit-suffix">months</span>
+                        </span>
                       </td>
                       <td>&nbsp;</td>
                     </tr>
