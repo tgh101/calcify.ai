@@ -7,6 +7,11 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ## [Unreleased]
 
 ### Added
+- Amortization calculator page (`amortization-calculator.html`) with loan amount, term (years+months), interest rate inputs, optional extra payments section with dynamic system date, pie chart (principal vs interest), line chart, amortization tables, and educational content
+- Amortization calculator logic (`js/amortization-calculator.js`)
+- Unit tests for amortization calculator (`tests/amortization-calculator.test.js`)
+
+### Added
 - Mortgage calculator page (`mortgage-calculator.html`) with full form, SVG pie/line charts, amortisation tables, biweekly comparison, and educational content
 - Mortgage calculator logic (`js/mortgage-calculator.js`) with 10 exported pure functions: calculateMonthlyPayment, buildAmortizationSchedule, calculateBiweeklyPayment, formatCurrency, computeTotalCosts, generatePieChartData, buildAnnualTableHTML, buildMonthlyTableHTML, insertComma2, proComma2, cunitchange
 - Unit tests for mortgage calculator (`tests/mortgage-calculator.test.js`) — 24 tests covering 7 modules
