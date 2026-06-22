@@ -700,6 +700,9 @@ function calculateAmortization() {
   }
 
   // ── DOM updates ──
+  var resultsContainer = el('results-container');
+  if (resultsContainer) resultsContainer.style.display = 'block';
+
   var setVal = function(id, val) {
     var elem = el(id);
     if (elem) elem.textContent = typeof val === 'number' ? formatCurrency(val) : val;
