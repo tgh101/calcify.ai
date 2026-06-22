@@ -20,6 +20,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Added conditional display logic for result table rows based on non-zero values
 
 ### Fixed
+- Yearly extra payment month selector ID mismatch: JS `mortgage-calculator.js` reads `cexysmm` but HTML had `cexysm`, silently ignoring user-selected month and defaulting to loan start month. Fix: renamed HTML element ID to `cexysmm` so yearly extra payments apply in the correct calendar month.
 - Line chart now shows cumulative interest and cumulative payment (running total over full term) instead of per-year values
 - Line chart Y-axis labels now show in "K" format (e.g. 200K, 400K) without dollar sign
 - Line chart increased to 350×220 for better readability
