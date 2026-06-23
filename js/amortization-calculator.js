@@ -191,7 +191,7 @@ function renderPieChart(container, data, width, height) {
   var svg = '<svg width="' + svgWidth + '" height="' + svgHeight + '">';
   svg += '<style>'
     + '.mcpline{stroke:white;stroke-width:1;}'
-    + '.mcplegend{font-size:13;font-family:arial,helvetica,sans-serif;fill:#0d233a;}'
+    + '.mcplegend{font-size:16;font-family:arial,helvetica,sans-serif;fill:#0d233a;}'
     + '.mcplabel{fill:#fff;stroke-width:2;font-family:arial,helvetica,sans-serif;font-size:12px;'
     + 'paint-order:stroke;dominant-baseline:middle;text-anchor:middle;}'
     + '</style>';
@@ -278,15 +278,16 @@ function renderPieChart(container, data, width, height) {
  *
  * @param {HTMLElement} container
  * @param {Array<object>} schedule - From buildAmortizationSchedule
+ * @param {number} startBalance - Initial loan balance (for year 0 line start)
  * @param {number} termYears
  * @param {number} [width=350]
  * @param {number} [height=220]
  */
-function renderLineChart(container, schedule, termYears, width, height) {
+function renderLineChart(container, schedule, startBalance, termYears, width, height) {
   if (!container || !schedule || schedule.length === 0) { if (container) container.innerHTML = ''; return; }
 
   var svgWidth  = width  || 350;
-  var svgHeight = height || 220;
+  var svgHeight = height || 230;
   var padding = { top: 10, right: 10, bottom: 35, left: 55 };
   var chartW = svgWidth  - padding.left - padding.right;
   var chartH = svgHeight - padding.top  - padding.bottom;
@@ -296,6 +297,14 @@ function renderLineChart(container, schedule, termYears, width, height) {
   var yearPrincipal = 0;
   var cumInterest = 0;
   var cumPrincipal = 0;
+
+  // Prepend year 0 data point so lines start exactly at the y-axis
+  yearlyData.push({
+    year: 0,
+    balance: startBalance,
+    interest: 0,
+    payment: 0,
+  });
 
   for (var m = 0; m < schedule.length; m++) {
     yearInterest  += schedule[m].interest;
@@ -329,7 +338,7 @@ function renderLineChart(container, schedule, termYears, width, height) {
   var svg = '<svg width="' + svgWidth + '" height="' + svgHeight + '">';
   svg += '<style>'
     + '.mclgrid{stroke:#999;stroke-width:0.5;}'
-    + '.mcllegend{font-size:13;font-family:arial,helvetica,sans-serif;fill:#0d233a;}'
+    + '.mcllegend{font-size:16px;font-family:arial,helvetica,sans-serif;fill:#0d233a;}'
     + '.mcltitle{fill:#000;font-family:arial,helvetica,sans-serif;font-size:15px;dominant-baseline:middle;text-anchor:middle;}'
     + '.mcllabely{fill:#666;font-family:arial,helvetica,sans-serif;font-size:12px;dominant-baseline:middle;text-anchor:end;}'
     + '.mcllabelx{fill:#666;font-family:arial,helvetica,sans-serif;font-size:12px;dominant-baseline:hanging;text-anchor:middle;}'
@@ -369,11 +378,11 @@ function renderLineChart(container, schedule, termYears, width, height) {
 
   svg += '<rect x="' + padding.left + '" y="' + padding.top + '" width="' + chartW + '" height="' + chartH + '" style="stroke:#666;stroke-width:0.5;fill:none;"></rect>';
 
-  var legY = padding.top + 5;
+  var legY = padding.top + 15;
   lines.forEach(function(lineInfo) {
     svg += '<rect x="' + (padding.left + 5) + '" y="' + legY + '" width="16" height="5" style="fill:' + lineInfo.color + ';"></rect>';
-    svg += '<text x="' + (padding.left + 27) + '" y="' + (legY + 6) + '" class="mcllegend" font-size="10">' + lineInfo.label + '</text>';
-    legY += 16;
+    svg += '<text x="' + (padding.left + 27) + '" y="' + (legY + 6) + '" class="mcllegend">' + lineInfo.label + '</text>';
+    legY += 22;
   });
 
   svg += '</svg>';
@@ -392,7 +401,6 @@ function buildAnnualTableHTML(schedule, showDate) {
   var yearly = [];
   var yearInterest  = 0;
   var yearPrincipal = 0;
-  var yearExtra     = 0;
   var yearStartMonth = schedule[0] ? schedule[0].dateMonth : 1;
   var yearStartYear  = schedule[0] ? schedule[0].dateYear  : new Date().getFullYear();
   var yearNum = 1;
@@ -401,7 +409,6 @@ function buildAnnualTableHTML(schedule, showDate) {
     var entry = schedule[m];
     yearInterest  += entry.interest;
     yearPrincipal += entry.principal;
-    yearExtra     += entry.extraPaid || 0;
     var isYearEnd = (m + 1) % 12 === 0 || m === schedule.length - 1;
     if (isYearEnd) {
       var pad = function(n) { return (n < 10 ? '0' : '') + n; };
@@ -410,13 +417,11 @@ function buildAnnualTableHTML(schedule, showDate) {
         dateRange: pad(yearStartMonth) + '/' + yearStartYear + '–' + pad(entry.dateMonth) + '/' + entry.dateYear,
         interest:  Math.round(yearInterest  * 100) / 100,
         principal: Math.round(yearPrincipal * 100) / 100,
-        extra:     Math.round(yearExtra     * 100) / 100,
         balance:   entry.balance,
       });
       yearNum++;
       yearInterest  = 0;
       yearPrincipal = 0;
-      yearExtra     = 0;
       yearStartMonth = m + 1 < schedule.length ? schedule[m + 1].dateMonth : 1;
       yearStartYear  = m + 1 < schedule.length ? schedule[m + 1].dateYear  : new Date().getFullYear();
     }
@@ -426,14 +431,13 @@ function buildAnnualTableHTML(schedule, showDate) {
   var dateCell = showDate ? function(y) { return '<td>' + y.dateRange + '</td>'; } : function() { return ''; };
 
   var html = '<table class="cinfoT">';
-  html += '<tr align="center"><th>Year</th>' + dateHeader + '<th>Interest</th><th>Principal</th><th>Extra Paid</th><th>Ending Balance</th></tr>';
+  html += '<tr align="center"><th>Year</th>' + dateHeader + '<th>Interest</th><th>Principal</th><th>Ending Balance</th></tr>';
   yearly.forEach(function(y) {
     html += '<tr align="right">'
       + '<td>' + y.year      + '</td>'
       + dateCell(y)
       + '<td>' + formatCurrency(y.interest)  + '</td>'
       + '<td>' + formatCurrency(y.principal) + '</td>'
-      + '<td>' + formatCurrency(y.extra)     + '</td>'
       + '<td>' + formatCurrency(y.balance)   + '</td>'
       + '</tr>';
   });
@@ -452,8 +456,8 @@ function buildMonthlyTableHTML(schedule, showDate) {
   showDate = showDate !== false;
   var html = '<table class="cinfoT">';
   var dateHeader = showDate ? '<th>Date</th>' : '';
-  var numCols = showDate ? 6 : 5;
-  html += '<tr align="center"><th>Month</th>' + dateHeader + '<th>Interest</th><th>Principal</th><th>Extra Paid</th><th>Ending Balance</th></tr>';
+  var numCols = showDate ? 5 : 4;
+  html += '<tr align="center"><th>Month</th>' + dateHeader + '<th>Interest</th><th>Principal</th><th>Ending Balance</th></tr>';
 
   for (var m = 0; m < schedule.length; m++) {
     var entry = schedule[m];
@@ -464,7 +468,6 @@ function buildMonthlyTableHTML(schedule, showDate) {
       + dateStr
       + '<td>' + formatCurrency(entry.interest)  + '</td>'
       + '<td>' + formatCurrency(entry.principal) + '</td>'
-      + '<td>' + formatCurrency(entry.extraPaid || 0) + '</td>'
       + '<td>' + formatCurrency(entry.balance)   + '</td>'
       + '</tr>';
     if ((m + 1) % 12 === 0 && m < schedule.length - 1) {
@@ -776,7 +779,7 @@ function calculateAmortization() {
   var lineChartContainer = el('line-chart-container');
   if (lineChartContainer) {
     var actualYearsChart = Math.ceil(schedule.length / 12);
-    renderLineChart(lineChartContainer, schedule, actualYearsChart);
+    renderLineChart(lineChartContainer, schedule, loanAmount, actualYearsChart);
   }
 
   // Scroll to results
