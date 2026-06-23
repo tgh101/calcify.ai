@@ -384,9 +384,11 @@ function renderLineChart(container, schedule, termYears, width, height) {
  * Builds an annual amortisation table HTML string.
  *
  * @param {Array<object>} schedule - From buildAmortizationSchedule
+ * @param {boolean} [showDate=true] - Whether to show the Date column
  * @returns {string} HTML table
  */
-function buildAnnualTableHTML(schedule) {
+function buildAnnualTableHTML(schedule, showDate) {
+  showDate = showDate !== false;
   var yearly = [];
   var yearInterest  = 0;
   var yearPrincipal = 0;
@@ -420,12 +422,15 @@ function buildAnnualTableHTML(schedule) {
     }
   }
 
+  var dateHeader = showDate ? '<th>Date</th>' : '';
+  var dateCell = showDate ? function(y) { return '<td>' + y.dateRange + '</td>'; } : function() { return ''; };
+
   var html = '<table class="cinfoT">';
-  html += '<tr align="center"><th>Year</th><th>Date</th><th>Interest</th><th>Principal</th><th>Extra Paid</th><th>Ending Balance</th></tr>';
+  html += '<tr align="center"><th>Year</th>' + dateHeader + '<th>Interest</th><th>Principal</th><th>Extra Paid</th><th>Ending Balance</th></tr>';
   yearly.forEach(function(y) {
     html += '<tr align="right">'
       + '<td>' + y.year      + '</td>'
-      + '<td>' + y.dateRange + '</td>'
+      + dateCell(y)
       + '<td>' + formatCurrency(y.interest)  + '</td>'
       + '<td>' + formatCurrency(y.principal) + '</td>'
       + '<td>' + formatCurrency(y.extra)     + '</td>'
@@ -440,26 +445,30 @@ function buildAnnualTableHTML(schedule) {
  * Builds a monthly amortisation table HTML string.
  *
  * @param {Array<object>} schedule - From buildAmortizationSchedule
+ * @param {boolean} [showDate=true] - Whether to show the Date column
  * @returns {string} HTML table
  */
-function buildMonthlyTableHTML(schedule) {
+function buildMonthlyTableHTML(schedule, showDate) {
+  showDate = showDate !== false;
   var html = '<table class="cinfoT">';
-  html += '<tr align="center"><th>Month</th><th>Date</th><th>Interest</th><th>Principal</th><th>Extra Paid</th><th>Ending Balance</th></tr>';
+  var dateHeader = showDate ? '<th>Date</th>' : '';
+  var numCols = showDate ? 6 : 5;
+  html += '<tr align="center"><th>Month</th>' + dateHeader + '<th>Interest</th><th>Principal</th><th>Extra Paid</th><th>Ending Balance</th></tr>';
 
   for (var m = 0; m < schedule.length; m++) {
     var entry = schedule[m];
     var pad = function(n) { return (n < 10 ? '0' : '') + n; };
-    var dateStr = pad(entry.dateMonth) + '/' + entry.dateYear;
+    var dateStr = showDate ? '<td>' + pad(entry.dateMonth) + '/' + entry.dateYear + '</td>' : '';
     html += '<tr align="right">'
       + '<td>' + entry.month            + '</td>'
-      + '<td>' + dateStr                + '</td>'
+      + dateStr
       + '<td>' + formatCurrency(entry.interest)  + '</td>'
       + '<td>' + formatCurrency(entry.principal) + '</td>'
       + '<td>' + formatCurrency(entry.extraPaid || 0) + '</td>'
       + '<td>' + formatCurrency(entry.balance)   + '</td>'
       + '</tr>';
     if ((m + 1) % 12 === 0 && m < schedule.length - 1) {
-      html += '<tr><td colspan="6" align="center">End of year ' + Math.ceil((m + 1) / 12) + '</td></tr>';
+      html += '<tr><td colspan="' + numCols + '" align="center">End of year ' + Math.ceil((m + 1) / 12) + '</td></tr>';
     }
   }
 
@@ -509,23 +518,26 @@ function proComma2(id) {
 }
 
 /**
- * Toggle the extra payments section.
- * @param {number} optVal - 1 show | 0 hide
+ * Toggle the extra payments section based on checkbox state.
+ * Reads checkbox state directly to show/hide extras section.
  */
-function cshamoreoption(optVal) {
+function cshamoreoption() {
   var section = document.getElementById('cmoreoptioninputs');
   var linkDiv = document.getElementById('cmoreoptionlinks');
   var hidden  = document.getElementById('cmoreoption');
-  if (!section || !linkDiv || !hidden) return;
+  var checkbox = document.getElementById('extra-payments-toggle');
+  if (!section || !linkDiv || !hidden || !checkbox) return;
 
-  if (optVal === 1) {
+  var isChecked = checkbox.checked;
+
+  if (isChecked) {
     section.style.display = 'block';
     hidden.value          = '1';
-    linkDiv.innerHTML     = '<a href="#" onclick="cshamoreoption(0);return false;">– Fewer Options</a>';
+    linkDiv.innerHTML     = '<a href="#" onclick="cshamoreoption();return false;">– Fewer Options</a>';
   } else {
     section.style.display = 'none';
     hidden.value          = '0';
-    linkDiv.innerHTML     = '<a href="#" onclick="cshamoreoption(1);return false;">+ Optional: make extra payments</a>';
+    linkDiv.innerHTML     = '<a href="#" onclick="cshamoreoption();return false;">+ Optional: make extra payments</a>';
   }
 }
 
@@ -752,11 +764,12 @@ function calculateAmortization() {
     renderPieChart(pieContainer, pieData);
   }
 
-  // Amortization tables
+  // Amortization tables - show Date column only when extra payments are enabled
+  var showDateCol = el('cmoreoption') ? el('cmoreoption').value === '1' : false;
   var monthlyAmo = el('monthlyamo');
   var yearlyAmo  = el('yearlyamo');
-  if (monthlyAmo) monthlyAmo.innerHTML = buildMonthlyTableHTML(schedule);
-  if (yearlyAmo)  yearlyAmo.innerHTML  = buildAnnualTableHTML(schedule);
+  if (monthlyAmo) monthlyAmo.innerHTML = buildMonthlyTableHTML(schedule, showDateCol);
+  if (yearlyAmo)  yearlyAmo.innerHTML  = buildAnnualTableHTML(schedule, showDateCol);
   amoChange(0);
 
   // Line chart
@@ -829,8 +842,16 @@ function initAmortizationCalculator() {
   ];
   numberIds.forEach(function(id) { proComma2(id); });
 
+  // Set up checkbox listener
+  var checkbox = document.getElementById('extra-payments-toggle');
+  if (checkbox) {
+    checkbox.addEventListener('change', function() {
+      cshamoreoption();
+    });
+  }
+
   // Hide the extras section by default
-  cshamoreoption(0);
+  cshamoreoption();
   cshadditionalonetime(0);
   amoChange(0);
 
