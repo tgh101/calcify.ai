@@ -973,13 +973,10 @@ function calculatePayoffFromPayment() {
     durationEl2.textContent = formatDuration(payoffYears, payoffMonthsRem);
   }
 
-  // Normal repayment: hide green banner and comparison bars (mode 2)
+  // Normal repayment: hide comparison bars only (keep green banner)
   const payoffBanner2 = el('payoff-banner2');
   const comparisonBars2 = el('comparison-bars2');
   if (payoffOption === 'original') {
-    if (payoffBanner2) {
-      payoffBanner2.style.display = 'none';
-    }
     if (comparisonBars2) {
       comparisonBars2.style.display = 'none';
     }
