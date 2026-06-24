@@ -13,6 +13,12 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Mortgage payoff calculator: green banner and comparison bars are hidden when "Normal repayment" is selected; only results table and amortization link remain visible
 - Mortgage payoff calculator: amortization table is now toggleable via "View/Hide Amortization Table" link instead of one-way show-only
 - Mortgage payoff calculator: paraphrased main description and section headers for clarity
+- Mortgage payoff calculator: biweekly repayment now generates a proper biweekly amortization schedule for chart and comparison; old and new balance/interest lines are both visible in the line chart
+- Mortgage payoff calculator: mode 2 biweekly repayment now shows comparison bars (interest and time savings) correctly
+- Mortgage payoff calculator: summary text message is now hidden when "Normal repayment" is selected in both calculator modes
+- Mortgage payoff calculator: "months" input under Remaining term width changed from 85px to 110px so it aligns with other input wrappers
+- Mortgage payoff calculator: line chart now stops drawing lines once the loan is paid off (no flat trailing lines at 0 or max)
+- Mortgage payoff calculator: line chart legend dynamically shows 2 lines for "Normal repayment" and 4 lines for extra/biweekly; legend has a semi-transparent white background for readability
 
 ### Added
 - Amortization calculator page (`amortization-calculator.html`) with loan amount, term (years+months), interest rate inputs, optional extra payments section with dynamic system date, pie chart (principal vs interest), line chart, amortization tables, and educational content
