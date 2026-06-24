@@ -633,40 +633,37 @@ function calculatePayoff() {
   // ── Summary text ──
   const summaryEl = el('payoff-summary');
   if (summaryEl) {
-    let summaryText = 'The remaining balance is ' + formatCurrency(remainingBalance) + '. ';
-    if (payoffOption === 'extra' && hasAnyExtra) {
-      summaryText +=
-        'By paying extra ' +
-        formatCurrency(extraMonthly) +
-        ' per month starting now, the loan will be paid off in <b>' +
-        payoffYears +
-        ' years and ' +
-        payoffMonthsRem +
-        ' months</b>. It is <b>' +
-        Math.floor(savedMonths / 12) +
-        ' years and ' +
-        (savedMonths % 12) +
-        ' months earlier</b>. This results in savings of <b>' +
-        formatCurrency(interestSaved) +
-        '</b> in interest.';
-    } else if (payoffOption === 'biweekly') {
-      summaryText +=
-        'By switching to biweekly payments of ' +
-        formatCurrency(biweeklyPayment) +
-        ', the loan will be paid off in <b>' +
-        payoffYears +
-        ' years and ' +
-        payoffMonthsRem +
-        ' months</b>.';
-    } else if (payoffOption === 'original') {
-      summaryText +=
-        'The loan will be paid off in <b>' +
-        payoffYears +
-        ' years and ' +
-        payoffMonthsRem +
-        ' months</b>.';
+    if (payoffOption === 'original') {
+      summaryEl.innerHTML = '';
+    } else {
+      let summaryText = 'The remaining balance is ' + formatCurrency(remainingBalance) + '. ';
+      if (payoffOption === 'extra' && hasAnyExtra) {
+        summaryText +=
+          'By paying extra ' +
+          formatCurrency(extraMonthly) +
+          ' per month starting now, the loan will be paid off in <b>' +
+          payoffYears +
+          ' years and ' +
+          payoffMonthsRem +
+          ' months</b>. It is <b>' +
+          Math.floor(savedMonths / 12) +
+          ' years and ' +
+          (savedMonths % 12) +
+          ' months earlier</b>. This results in savings of <b>' +
+          formatCurrency(interestSaved) +
+          '</b> in interest.';
+      } else if (payoffOption === 'biweekly') {
+        summaryText +=
+          'By switching to biweekly payments of ' +
+          formatCurrency(biweeklyPayment) +
+          ', the loan will be paid off in <b>' +
+          payoffYears +
+          ' years and ' +
+          payoffMonthsRem +
+          ' months</b>.';
+      }
+      summaryEl.innerHTML = summaryText;
     }
-    summaryEl.innerHTML = summaryText;
   }
 
   // ── Comparison bars ──
@@ -738,6 +735,12 @@ function calculatePayoff() {
   const barsContainer = el('comparison-bars');
   if (barsContainer) {
     barsContainer.innerHTML = barsHtml;
+  }
+
+  // ── Single-column mode for normal repayment ──
+  const resultsTable1 = document.querySelector('#results-container .results-table');
+  if (resultsTable1) {
+    resultsTable1.classList.toggle('hide-payoff-col', payoffOption === 'original');
   }
 
   // ── Comparison table ──
@@ -1080,6 +1083,12 @@ function calculatePayoffFromPayment() {
   const barsContainer2 = el('comparison-bars2');
   if (barsContainer2) {
     barsContainer2.innerHTML = barsHtml;
+  }
+
+  // ── Single-column mode for normal repayment ──
+  const resultsTable2 = document.querySelector('#results-container2 .results-table');
+  if (resultsTable2) {
+    resultsTable2.classList.toggle('hide-payoff-col', payoffOption === 'original');
   }
 
   // Comparison table (mode 2)
