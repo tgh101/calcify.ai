@@ -51,20 +51,6 @@
       .inpct {
         text-align: left;
       }
-      .inuiyear {
-        width: 85px;
-      }
-      .inuiyearspan {
-        font-size: 14px;
-        margin-left: 4px;
-      }
-      .inuipound {
-        width: 85px;
-      }
-      .inuipoundspan {
-        font-size: 14px;
-        margin-left: 4px;
-      }
       .panel select {
         font-size: 14px;
         padding: 3px;
@@ -134,6 +120,12 @@
         position: absolute;
         top: 2px;
         left: 2px;
+      }
+      .panel input[type='radio'] {
+        position: absolute;
+        opacity: 0;
+        width: 0;
+        height: 0;
       }
       .input-unit-wrapper {
         position: relative;
@@ -341,13 +333,13 @@
               <span>mortgage payoff calculator</span>
             </nav>
             <h1 class="page-title">Mortgage Payoff Calculator</h1>
-            <p>This mortgage payoff calculator helps evaluate how adding extra payments or bi-weekly payments can save on interest and shorten mortgage term.</p>
+            <p>This mortgage payoff calculator shows how extra payments or bi-weekly payments can reduce total interest and help you own your home sooner.</p>
 
             <!-- ============================================================ -->
             <!-- MODE 1: Known Remaining Term                                   -->
             <!-- ============================================================ -->
             <h2>If you know the remaining loan term</h2>
-            <p>Use this calculator if the term length of the remaining loan is known and there is information on the original loan.</p>
+            <p>Enter your original loan details and remaining term to compare payoff strategies against your current schedule.</p>
 
             <div class="calculator-layout">
               <!-- Left: Form -->
@@ -366,8 +358,10 @@
                     <tr>
                       <td align="left" style="padding-left:2px">Original loan term</td>
                       <td align="left">
-                        <input type="text" name="cloanterm" id="cloanterm" value="30" class="inhalf inuiyear" style="text-align:left" />
-                        <span class="inuiyearspan">years</span>
+                        <span class="input-unit-wrapper" style="width:110px;display:inline-block">
+                          <input type="text" name="cloanterm" id="cloanterm" value="30" class="inhalf" style="width:100%;text-align:left" />
+                          <span class="unit-suffix">years</span>
+                        </span>
                       </td>
                     </tr>
                     <tr>
@@ -382,10 +376,14 @@
                     <tr>
                       <td align="left" style="padding-top:8px" valign="top">Remaining term</td>
                       <td align="left">
-                        <input type="text" name="cremainingyear" id="cremainingyear" value="25" class="inhalf inuiyear" style="text-align:left" />
-                        <span class="inuiyearspan">years</span><br />
-                        <input type="text" name="cremainingmonth" id="cremainingmonth" value="0" class="inhalf inuipound" style="text-align:left" />
-                        <span class="inuipoundspan">months</span>
+                        <span class="input-unit-wrapper" style="width:110px;display:inline-block">
+                          <input type="text" name="cremainingyear" id="cremainingyear" value="25" class="inhalf" style="width:100%;text-align:left" />
+                          <span class="unit-suffix">years</span>
+                        </span><br />
+                        <span class="input-unit-wrapper" style="width:85px;display:inline-block">
+                          <input type="text" name="cremainingmonth" id="cremainingmonth" value="0" class="inhalf" style="width:100%;text-align:left" />
+                          <span class="unit-suffix">months</span>
+                        </span>
                       </td>
                     </tr>
                     <tr>
@@ -421,8 +419,8 @@
               <div>
                 <a name="loanterm" id="loanterm"></a>
                 <div id="results-container" style="height:100%">
-                  <h2 class="h2result">
-                    Payoff in <span id="monthly-pay-value">$2,398.20</span>
+                  <h2 class="h2result" id="payoff-banner1">
+                    Payoff in <span id="payoff-duration-value1">0 years and 0 months</span>
                   </h2>
                   <p id="payoff-summary" style="font-size:14px;margin:8px 0;"></p>
                   <div id="comparison-bars" style="padding:6px 0 16px 0;"></div>
@@ -464,29 +462,29 @@
                     </tr>
                   </table>
                   <p align="center">
-                    <a href="#" onclick="document.getElementById('camortizationdiv1').style.display='block';return false;">View Amortization Table</a>
+                    <a href="#" id="camortization-link1" onclick="toggleAmortization1();return false;">View Amortization Table</a>
                   </p>
                 </div>
               </div>
             </div>
 
             <div id="clear"></div>
-            <div id="camortizationdiv1" style="display:none;">
-              <h2>Monthly Amortization Schedule</h2>
-              <div style="text-align:right;margin-top:-15px;">
-                <a href="#" onclick="document.getElementById('camortizationdiv1').style.display='none';return false;">
-                  <img src="img/svg/calculator-white.svg" width="18" height="18" alt="close" style="opacity:0.5" />
-                </a>
-              </div>
-              <!-- Filled by JS -->
-            </div>
+                <div id="camortizationdiv1" style="display:none;">
+                  <h2>Monthly Amortization Schedule</h2>
+                  <div style="text-align:right;margin-top:-15px;">
+                    <a href="#" onclick="toggleAmortization1();return false;">
+                      <img src="img/svg/calculator-white.svg" width="18" height="18" alt="close" style="opacity:0.5" />
+                    </a>
+                  </div>
+                  <!-- Filled by JS -->
+                </div>
             <div id="line-chart-container" style="text-align:center;margin:10px 0;"></div>
 
             <!-- ============================================================ -->
             <!-- MODE 2: Unknown Remaining Term                                -->
             <!-- ============================================================ -->
             <h2>If you don't know the remaining loan term</h2>
-            <p>Use this calculator if the term length of the remaining loan is not known. The unpaid principal balance, interest rate, and monthly payment values can be found in the monthly or quarterly mortgage statement.</p>
+            <p>Enter your unpaid balance, monthly payment, and interest rate — all found on your mortgage statement — to see your options.</p>
 
             <div class="calculator-layout">
               <!-- Left: Form -->
@@ -553,8 +551,8 @@
               <div>
                 <a name="monthlypay" id="monthlypay"></a>
                 <div id="results-container2" style="height:100%">
-                  <h2 class="h2result">
-                    Payoff in <span id="monthly-pay-value2">$1,500.00</span>
+                  <h2 class="h2result" id="payoff-banner2">
+                    Payoff in <span id="payoff-duration-value2">0 years and 0 months</span>
                   </h2>
                   <p id="payoff-summary2" style="font-size:14px;margin:8px 0;"></p>
                   <div id="comparison-bars2" style="padding:6px 0 16px 0;"></div>
@@ -581,22 +579,22 @@
                     </tr>
                   </table>
                   <p align="center">
-                    <a href="#" onclick="document.getElementById('camortizationdiv2').style.display='block';return false;">View Amortization Table</a>
+                    <a href="#" id="camortization-link2" onclick="toggleAmortization2();return false;">View Amortization Table</a>
                   </p>
                 </div>
               </div>
             </div>
 
             <div id="clear"></div>
-            <div id="camortizationdiv2" style="display:none;">
-              <h2>Monthly Amortization Schedule</h2>
-              <div style="text-align:right;margin-top:-15px;">
-                <a href="#" onclick="document.getElementById('camortizationdiv2').style.display='none';return false;">
-                  <img src="img/svg/calculator-white.svg" width="18" height="18" alt="close" style="opacity:0.5" />
-                </a>
-              </div>
-              <!-- Filled by JS -->
-            </div>
+                <div id="camortizationdiv2" style="display:none;">
+                  <h2>Monthly Amortization Schedule</h2>
+                  <div style="text-align:right;margin-top:-15px;">
+                    <a href="#" onclick="toggleAmortization2();return false;">
+                      <img src="img/svg/calculator-white.svg" width="18" height="18" alt="close" style="opacity:0.5" />
+                    </a>
+                  </div>
+                  <!-- Filled by JS -->
+                </div>
             <div id="line-chart-container2" style="text-align:center;margin:10px 0;"></div>
 
             <fieldset style="margin-top:20px;padding:10px;border:1px solid #ccc;font-size:14px;">

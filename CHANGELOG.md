@@ -6,6 +6,14 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+### Fixed
+- Mortgage payoff calculator: hidden native radio button input to eliminate duplicate select circles; custom `.rbmark` circle remains visible
+- Mortgage payoff calculator: "Original loan term" and "Remaining term" inputs now wrap years/months in `input-unit-wrapper` with `unit-suffix` inside the input box (consistent with amortization calculator)
+- Mortgage payoff calculator: green banner now shows payoff duration ("15 years and 3 months") instead of monthly payment amount
+- Mortgage payoff calculator: green banner and comparison bars are hidden when "Normal repayment" is selected; only results table and amortization link remain visible
+- Mortgage payoff calculator: amortization table is now toggleable via "View/Hide Amortization Table" link instead of one-way show-only
+- Mortgage payoff calculator: paraphrased main description and section headers for clarity
+
 ### Added
 - Amortization calculator page (`amortization-calculator.html`) with loan amount, term (years+months), interest rate inputs, optional extra payments section with dynamic system date, pie chart (principal vs interest), line chart, amortization tables, and educational content
 - Amortization calculator logic (`js/amortization-calculator.js`)

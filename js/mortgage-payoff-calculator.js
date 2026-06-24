@@ -454,8 +454,22 @@ function calculatePayoff() {
   var resultsContainer = el('results-container');
   if (resultsContainer) resultsContainer.style.display = 'block';
 
-  var monthlyPayEl = el('monthly-pay-value');
-  if (monthlyPayEl) monthlyPayEl.textContent = formatCurrency(origMonthlyPayment);
+  // Payoff duration in green banner
+  var durationEl = el('payoff-duration-value1');
+  if (durationEl) {
+    durationEl.textContent = formatDuration(payoffYears, payoffMonthsRem);
+  }
+
+  // Normal repayment: hide green banner and comparison bars
+  var payoffBanner      = el('payoff-banner1');
+  var comparisonBars    = el('comparison-bars');
+  if (payoffOption === 'original') {
+    if (payoffBanner)    payoffBanner.style.display    = 'none';
+    if (comparisonBars)  comparisonBars.style.display  = 'none';
+  } else {
+    if (payoffBanner)    payoffBanner.style.display    = 'block';
+    if (comparisonBars)  comparisonBars.style.display  = 'block';
+  }
 
   // ── Summary text ──
   var summaryEl = el('payoff-summary');
@@ -615,8 +629,22 @@ function calculatePayoffFromPayment() {
     if (elem) elem.textContent = typeof val === 'number' ? formatCurrency(val) : val;
   };
 
-  var monthlyPayEl = el('monthly-pay-value2');
-  if (monthlyPayEl) monthlyPayEl.textContent = formatCurrency(monthlyPay);
+  // Payoff duration in green banner (mode 2)
+  var durationEl2 = el('payoff-duration-value2');
+  if (durationEl2) {
+    durationEl2.textContent = formatDuration(payoffYears, payoffMonthsRem);
+  }
+
+  // Normal repayment: hide green banner and comparison bars (mode 2)
+  var payoffBanner2    = el('payoff-banner2');
+  var comparisonBars2  = el('comparison-bars2');
+  if (payoffOption === 'original') {
+    if (payoffBanner2)    payoffBanner2.style.display    = 'none';
+    if (comparisonBars2)  comparisonBars2.style.display  = 'none';
+  } else {
+    if (payoffBanner2)    payoffBanner2.style.display    = 'block';
+    if (comparisonBars2)  comparisonBars2.style.display  = 'block';
+  }
 
   var summaryEl = el('payoff-summary2');
   if (summaryEl) {
@@ -787,6 +815,47 @@ function renderPayoffLineChart(container, originalSchedule, payoffSchedule, mont
   container.innerHTML = svg;
 }
 
+/**
+ * Formats years and months into a human-readable duration string.
+ *
+ * @param {number} years  - Number of years
+ * @param {number} months - Number of months (0-11)
+ * @returns {string} Formatted string, e.g. "15 years and 3 months"
+ */
+function formatDuration(years, months) {
+  var parts = [];
+  if (years > 0)     parts.push(years    + (years    === 1 ? ' year'    : ' years'));
+  if (months > 0)    parts.push(months   + (months   === 1 ? ' month'   : ' months'));
+  if (parts.length === 0) parts.push('0 months');
+  return parts.join(' and ');
+}
+
+/**
+ * Toggles the visibility of the amortization table for mode 1 (known term).
+ */
+function toggleAmortization1() {
+  var div  = document.getElementById('camortizationdiv1');
+  var link = document.getElementById('camortization-link1');
+  if (!div) return;
+
+  var isHidden = div.style.display === 'none' || div.style.display === '';
+  div.style.display = isHidden ? 'block' : 'none';
+  if (link) link.textContent = isHidden ? 'Hide Amortization Table' : 'View Amortization Table';
+}
+
+/**
+ * Toggles the visibility of the amortization table for mode 2 (unknown term).
+ */
+function toggleAmortization2() {
+  var div  = document.getElementById('camortizationdiv2');
+  var link = document.getElementById('camortization-link2');
+  if (!div) return;
+
+  var isHidden = div.style.display === 'none' || div.style.display === '';
+  div.style.display = isHidden ? 'block' : 'none';
+  if (link) link.textContent = isHidden ? 'Hide Amortization Table' : 'View Amortization Table';
+}
+
 /* ========================================================================
    SECTION 4 — Form clear
    ======================================================================== */
@@ -852,6 +921,8 @@ function initMortgagePayoffCalculator() {
   window.clearForm2              = clearForm2;
   window.cpayoffoptionChange     = cpayoffoptionChange;
   window.cpayoffoptionChange2    = cpayoffoptionChange2;
+  window.toggleAmortization1     = toggleAmortization1;
+  window.toggleAmortization2     = toggleAmortization2;
 
   calculatePayoff();
   calculatePayoffFromPayment();
