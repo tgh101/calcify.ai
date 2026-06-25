@@ -571,7 +571,6 @@ function calculatePayoff() {
 
   // Biweekly calculation
   let biweeklyPayment = 0;
-  let biweeklyMonths = 0;
   if (payoffOption === 'biweekly') {
     biweeklyPayment = Math.round((origMonthlyPayment / 2) * 100) / 100;
     const biweeklySchedule = buildBiweeklyAmortizationSchedule(
@@ -741,6 +740,10 @@ function calculatePayoff() {
   const resultsTable1 = document.querySelector('#results-container .results-table');
   if (resultsTable1) {
     resultsTable1.classList.toggle('hide-payoff-col', payoffOption === 'original');
+  }
+  const headerCell1 = document.querySelector('#results-container .results-table tr.gray-row td:nth-child(2)');
+  if (headerCell1) {
+    headerCell1.textContent = payoffOption === 'original' ? '' : 'Original';
   }
 
   // ── Comparison table ──
@@ -953,6 +956,8 @@ function calculatePayoffFromPayment() {
   const savedMonths = originalSchedule.length - actualPayoffMonths;
   const payoffYears = Math.floor(actualPayoffMonths / 12);
   const payoffMonthsRem = actualPayoffMonths % 12;
+  const origYears = Math.floor(originalSchedule.length / 12);
+  const origMonths = originalSchedule.length % 12;
 
   // ── DOM updates (mode 2 results) ──
   const resultsContainer2 = el('results-container2');
@@ -993,9 +998,7 @@ function calculatePayoffFromPayment() {
   if (summaryEl) {
     if (payoffOption === 'original') {
       summaryEl.innerHTML = '';
-    } else {
-      var origYears = Math.floor(originalSchedule.length / 12);
-      var origMonths = originalSchedule.length % 12;
+      } else {
       let remTermStr =
         'The remaining term of the loan is ' + origYears + ' years and ' + origMonths + ' months. ';
       if (hasAnyExtra) {
@@ -1087,6 +1090,10 @@ function calculatePayoffFromPayment() {
   if (resultsTable2) {
     resultsTable2.classList.toggle('hide-payoff-col', payoffOption === 'original');
   }
+  const headerCell2 = document.querySelector('#results-container2 .results-table tr.gray-row td:nth-child(2)');
+  if (headerCell2) {
+    headerCell2.textContent = payoffOption === 'original' ? '' : 'Original';
+  }
 
   // Comparison table (mode 2)
   setVal('result-remaining-term-orig', origYears + ' yrs, ' + origMonths + ' mos');
@@ -1134,7 +1141,7 @@ function renderPayoffLineChart(container, originalSchedule, payoffSchedule, mont
     return;
   }
 
-  const svgWidth = 350;
+  const svgWidth = 700;
   const svgHeight = 230;
   const padding = { top: 10, right: 10, bottom: 35, left: 55 };
   const chartW = svgWidth - padding.left - padding.right;
@@ -1147,6 +1154,11 @@ function renderPayoffLineChart(container, originalSchedule, payoffSchedule, mont
   let cumPayoffInterest = 0;
 
   const maxLen = Math.max(originalSchedule.length, payoffSchedule.length);
+
+  // Prepend year-0 starting point so lines begin at the y-axis
+  const startBalance = originalSchedule[0] ? originalSchedule[0].balance : 0;
+  origData.push({ year: 0, balance: startBalance, interest: 0 });
+  payoffData.push({ year: 0, balance: startBalance, interest: 0 });
   let termYears = Math.ceil(maxLen / 12);
   if (termYears < 1) {
     termYears = 1;
@@ -1178,7 +1190,9 @@ function renderPayoffLineChart(container, originalSchedule, payoffSchedule, mont
 
   // Trim trailing zero-balance points so lines stop when loan is paid off
   function trimTrailingZeros(data) {
-    if (data.length === 0) return data;
+    if (data.length === 0) {
+      return data;
+    }
     let lastNonZero = data.length - 1;
     while (lastNonZero > 0 && data[lastNonZero].balance === 0 && data[lastNonZero - 1].balance === 0) {
       lastNonZero--;
@@ -1498,6 +1512,7 @@ function clearForm2() {
    SECTION 5 — Initialisation
    ======================================================================== */
 
+// eslint-disable-next-line no-unused-vars -- called from HTML <script> tag
 function initMortgagePayoffCalculator() {
   const now = new Date();
   const currYear = now.getFullYear();
