@@ -914,12 +914,7 @@ function initHouseAffordabilityCalculator() {
     proComma2(id);
   });
 
-  // Initialize unit symbols for mode 2 only (mode 1 uses default html values)
-  cunitchange('c2downpercent', 'p');
-  cunitchange('c2propertytax', 'p');
-  cunitchange('c2hoa', 'p');
-  cunitchange('c2insurance', 'p');
-  cunitchange('c2maintenance', 'p');
+  // Mode 2 inputs already show correct unit symbols via HTML defaults
 
   // Wire show/hide fee toggle
   const feeCheckbox = document.getElementById('c2coverfees');
