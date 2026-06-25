@@ -24,6 +24,7 @@
         background: #f9f9f9;
         border: 1px solid #ccc;
         padding: 10px 8px;
+        margin-top: 20px;
         margin-bottom: 20px;
       }
       .panel table {
@@ -470,7 +471,7 @@
                 </tr>
                 <tr>
                   <td colspan="3" align="center" style="padding-top:8px;">
-                    <input type="submit" value="Calculate" />
+                    <input type="button" value="Calculate" onclick="calculateAffordability()" />
                     <input type="button" value="Clear" onclick="clearForm1()" />
                   </td>
                 </tr>
@@ -497,11 +498,11 @@
                 <tr><td>Estimated closing cost (one time, assume 3%)</td><td align="right"><span id="result-closing-cost2">$0.00</span></td></tr>
                 <tr><td><b>Total one-time payment at closing</b></td><td align="right"><b><span id="result-total-closing2">$0.00</span></b></td></tr>
                 <tr><td colspan="2">&nbsp;</td></tr>
-                <tr><td>Monthly mortgage payment</td><td align="right"><span id="result-monthly-mortgage2">$0.00</span></td></tr>
-                <tr><td>Monthly property tax</td><td align="right"><span id="result-monthly-tax2">$0.00</span></td></tr>
-                <tr><td>Monthly HOA or co-op fee</td><td align="right"><span id="result-monthly-hoa2">$0.00</span></td></tr>
-                <tr><td>Monthly insurance cost</td><td align="right"><span id="result-monthly-insurance2">$0.00</span></td></tr>
-                <tr><td>Monthly maintenance cost</td><td align="right"><span id="result-monthly-maintenance2">$0.00</span></td></tr>
+                <tr id="fee-row-mortgage2"><td>Monthly mortgage payment</td><td align="right"><span id="result-monthly-mortgage2">$0.00</span></td></tr>
+                <tr id="fee-row-tax2"><td>Monthly property tax</td><td align="right"><span id="result-monthly-tax2">$0.00</span></td></tr>
+                <tr id="fee-row-hoa2"><td>Monthly HOA or co-op fee</td><td align="right"><span id="result-monthly-hoa2">$0.00</span></td></tr>
+                <tr id="fee-row-ins2"><td>Monthly insurance cost</td><td align="right"><span id="result-monthly-insurance2">$0.00</span></td></tr>
+                <tr id="fee-row-maint2"><td>Monthly maintenance cost</td><td align="right"><span id="result-monthly-maintenance2">$0.00</span></td></tr>
                 <tr><td><b>Total monthly cost on the house</b></td><td align="right"><b><span id="result-total-monthly2">$0.00</span></b></td></tr>
               </table>
             </div>
@@ -632,7 +633,7 @@
                 </tr>
                 <tr>
                   <td colspan="3" align="center" style="padding-top:8px;">
-                    <input type="submit" value="Calculate" />
+                    <input type="button" value="Calculate" onclick="calculateAffordabilityFromBudget()" />
                     <input type="button" value="Clear" onclick="clearForm2()" />
                   </td>
                 </tr>

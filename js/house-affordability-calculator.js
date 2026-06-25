@@ -792,12 +792,21 @@ function calculateAffordabilityFromBudget() {
   setVal('result-closing-cost2', result.closingCost);
   setVal('result-total-closing2', result.totalAtClosing);
 
+  // Toggle fee rows based on coverFees
+  const feeRowIds = ['fee-row-mortgage2', 'fee-row-tax2', 'fee-row-hoa2', 'fee-row-ins2', 'fee-row-maint2'];
+  feeRowIds.forEach((rowId) => {
+    const row = document.getElementById(rowId);
+    if (row) {
+      row.style.display = coverFees ? '' : 'none';
+    }
+  });
+
   setVal('result-monthly-mortgage2', result.monthlyMortgage);
-  setVal('result-monthly-tax2', result.monthlyPropertyTax);
-  setVal('result-monthly-hoa2', result.monthlyHOA);
-  setVal('result-monthly-insurance2', result.monthlyInsurance);
-  setVal('result-monthly-maintenance2', result.monthlyMaintenance);
-  setVal('result-total-monthly2', result.totalMonthly);
+  setVal('result-monthly-tax2', coverFees ? result.monthlyPropertyTax : 0);
+  setVal('result-monthly-hoa2', coverFees ? result.monthlyHOA : 0);
+  setVal('result-monthly-insurance2', coverFees ? result.monthlyInsurance : 0);
+  setVal('result-monthly-maintenance2', coverFees ? result.monthlyMaintenance : 0);
+  setVal('result-total-monthly2', coverFees ? result.totalMonthly : result.monthlyMortgage);
 }
 
 /**
