@@ -1,0 +1,799 @@
+<!--
+  @file house-affordability-calculator.html
+  @description House affordability calculator page with two modes: DTI-based and budget-based, with rate widget and educational content
+  @module html/house-affordability-calculator
+-->
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>How Much House Can I Afford? - Free House Affordability Calculator | Calcify.ai</title>
+    <meta
+      name="description"
+      content="Free house affordability calculator to estimate an affordable house price based on factors such as income, debt, down payment, or simply budget."
+    />
+    <link rel="canonical" href="https://www.calcify.ai/house-affordability-calculator.html" />
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/layout.css" />
+    <link rel="stylesheet" href="css/category.css" />
+    <style>
+      /* ── House affordability calculator page-specific styles ────────── */
+      .panel {
+        background: #f9f9f9;
+        border: 1px solid #ccc;
+        padding: 10px 8px;
+        margin-bottom: 20px;
+      }
+      .panel table {
+        margin: 0 auto;
+      }
+      .panel table td {
+        padding: 3px 2px;
+        font-size: 14px;
+      }
+      .inhalf {
+        width: 110px;
+      }
+      .innormal {
+        width: 90px;
+      }
+      .inlong {
+        width: 110px;
+      }
+      .inlongest {
+        width: 160px;
+      }
+      .in4char {
+        width: 45px;
+      }
+      .indollar {
+        text-align: left;
+      }
+      .inpct {
+        text-align: left;
+      }
+      .panel select {
+        font-size: 14px;
+        padding: 3px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+      }
+      .panel input[type='text'] {
+        font-size: 14px;
+        padding: 3px;
+        border: 1px solid #aaa;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+      }
+      .panel input[type='submit'],
+      .panel input[type='button'] {
+        background: #3d7ebf;
+        color: #fff;
+        border: none;
+        padding: 8px 24px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+      }
+      .panel input[type='submit']:hover,
+      .panel input[type='button']:hover {
+        background: #2c5f8f;
+      }
+      .panel .ttimg {
+        vertical-align: middle;
+        cursor: help;
+        width: 14px;
+        height: 14px;
+        flex-shrink: 0;
+      }
+      .panel .label-cell {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        justify-content: flex-end;
+      }
+      .panel .label-cell .ttimg {
+        position: relative;
+        top: -1px;
+      }
+      .panel .cbcontainer {
+        display: inline-flex;
+        align-items: center;
+        cursor: pointer;
+        font-size: 14px;
+      }
+      .panel .cbcontainer input {
+        margin-right: 4px;
+      }
+
+      /* ── Input unit symbols ────────────────────────────────────── */
+      .input-unit-wrapper {
+        position: relative;
+        display: inline-block;
+      }
+      .unit-prefix {
+        position: absolute;
+        left: 1px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 14px;
+        color: #555;
+        pointer-events: none;
+        z-index: 1;
+      }
+      .unit-suffix {
+        position: absolute;
+        right: 6px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 14px;
+        color: #555;
+        pointer-events: none;
+        z-index: 1;
+      }
+      .panel .input-unit-wrapper .indollar {
+        padding-left: 10px;
+      }
+      .panel .input-unit-wrapper .inpct {
+        padding-right: 22px;
+      }
+
+      /* ── Calculator layout ──────────────────────────────────────── */
+      .calculator-layout {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        align-items: start;
+      }
+      @media (max-width: 1024px) {
+        .calculator-layout {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* ── Results ───────────────────────────────────────────────── */
+      #results-container,
+      #results-container2 {
+        display: none;
+      }
+      .h2result {
+        font-size: 22px;
+        font-weight: bold;
+        color: #fff;
+        background: #388e3c;
+        margin: 10px 0;
+        padding: 10px;
+      }
+      .results-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .results-table td {
+        padding: 4px 8px;
+        font-size: 14px;
+        border-bottom: 1px solid #fff;
+      }
+      .results-table tr.bold-row td {
+        font-weight: bold;
+      }
+      .results-table tr.gray-row td {
+        background: #eee;
+      }
+      .results-table td.align-right {
+        text-align: right;
+      }
+      .results-table .nowrap-label {
+        white-space: nowrap;
+      }
+      .smalltext {
+        font-size: 12px;
+      }
+
+      /* ── Info table ────────────────────────────────────────────── */
+      .cinfoT {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+      }
+      .cinfoT th {
+        background: #ddd;
+        padding: 4px;
+        font-weight: bold;
+      }
+      .cinfoT td {
+        padding: 1px 4px;
+        border-bottom: 1px solid #eee;
+        white-space: nowrap;
+      }
+
+      /* ── Educational content ───────────────────────────────────── */
+      .educational-content {
+        margin-top: 30px;
+      }
+      .educational-content h2 {
+        font-size: 22px;
+        margin: 20px 0 10px;
+      }
+      .educational-content h3 {
+        font-size: 18px;
+        margin: 16px 0 8px;
+        color: #0d233a;
+      }
+      .educational-content h4 {
+        font-size: 16px;
+        margin: 12px 0 6px;
+        color: #1a3a5c;
+      }
+      .educational-content p {
+        margin: 8px 0;
+        line-height: 1.6;
+        font-size: 14px;
+      }
+      .educational-content ul,
+      .educational-content ol {
+        margin: 8px 0 8px 24px;
+      }
+      .educational-content li {
+        margin: 4px 0;
+        font-size: 14px;
+        line-height: 1.5;
+      }
+      .educational-content a {
+        color: #3d7ebf;
+      }
+      .educational-content a:hover {
+        text-decoration: underline;
+      }
+      .edu-highlight {
+        background: #f0f7ff;
+        border-left: 3px solid #3d7ebf;
+        padding: 6px 10px;
+        margin: 8px 0;
+        font-size: 14px;
+        line-height: 1.5;
+      }
+    </style>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "home", "item": "https://www.calcify.ai/" },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "financial",
+            "item": "https://www.calcify.ai/financial-calculator.html"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "house affordability calculator",
+            "item": "https://www.calcify.ai/house-affordability-calculator.html"
+          }
+        ]
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "House Affordability Calculator",
+        "description": "Free house affordability calculator to estimate an affordable house price based on income, debt, down payment, or budget.",
+        "url": "https://www.calcify.ai/house-affordability-calculator.html"
+      }
+    </script>
+  </head>
+  <body>
+    <!-- Header (blue bar, logo + category nav) -->
+    <header id="site-header">
+      <div class="container">
+        <a href="/" class="logo" aria-label="Calcify.ai home">
+          <img src="img/svg/calculator-white.svg" alt="Calcify.ai" width="28" height="28" />
+          <span>Calcify.ai</span>
+        </a>
+        <nav class="top-nav" aria-label="Calculator categories">
+          <a href="financial-calculator.html" class="nav-item active" aria-current="page">Financial</a>
+          <a href="fitness-calculator.html" class="nav-item">Fitness & Health</a>
+          <a href="math-calculator.html" class="nav-item">Math</a>
+          <a href="other-calculator.html" class="nav-item">Others</a>
+        </nav>
+        <a href="/sign-in" class="login-link">sign in</a>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-content">
+      <div class="container">
+        <div class="page-layout">
+          <!-- Main Column -->
+          <section class="main-column">
+            <!-- Breadcrumb -->
+            <nav class="breadcrumb" aria-label="Breadcrumb">
+              <a href="/">home</a> / <a href="financial-calculator.html">financial</a> /
+              <span>house affordability calculator</span>
+            </nav>
+
+            <h1 class="page-title">How Much House Can I Afford?</h1>
+            <h2 style="font-size:22px;font-weight:bold;margin:10px 0;">House Affordability Calculator</h2>
+
+            <p>There are two House Affordability Calculators that can be used to estimate an affordable purchase amount for a house based on either household income-to-debt estimates or fixed monthly budgets. They are mainly intended for use by U.S. residents.</p>
+
+            <!-- Mode 1 results -->
+            <div id="results-container">
+              <h2 class="h2result">
+                You can afford a house up to <span id="affordable-house-price">$0</span>
+              </h2>
+              <p id="affordability-summary" style="padding:6px 0px;font-size:14px;"></p>
+              <table class="cinfoT">
+                <tr><td><b>You can borrow</b></td><td align="right"><b><span id="result-borrow">$0.00</span></b></td></tr>
+                <tr><td>Total price of the house</td><td align="right"><span id="result-house-price">$0.00</span></td></tr>
+                <tr><td>Down payment</td><td align="right"><span id="result-down-payment">$0.00</span></td></tr>
+                <tr><td>Estimated closing cost (one time, assume 3%)</td><td align="right"><span id="result-closing-cost">$0.00</span></td></tr>
+                <tr><td>Front-end debt-to-income (DTI) ratio</td><td align="right"><span id="dti-front-label">28%</span></td></tr>
+                <tr><td>Back-end debt-to-income (DTI) ratio</td><td align="right"><span id="dti-back-label">36%</span></td></tr>
+                <tr><td><b>Total one-time payment at closing</b></td><td align="right"><b><span id="result-total-closing">$0.00</span></b></td></tr>
+                <tr><td colspan="2">&nbsp;</td></tr>
+                <tr><td>Monthly mortgage payment</td><td align="right"><span id="result-monthly-mortgage">$0.00</span></td></tr>
+                <tr><td>Annual property tax</td><td align="right"><span id="result-annual-tax">$0.00</span></td></tr>
+                <tr><td>Annual HOA or co-op fee</td><td align="right"><span id="result-annual-hoa">$0.00</span></td></tr>
+                <tr><td>Annual insurance cost</td><td align="right"><span id="result-annual-insurance">$0.00</span></td></tr>
+                <tr><td><b>Total monthly cost on the house</b></td><td align="right"><b><span id="result-total-monthly">$0.00</span></b></td></tr>
+              </table>
+            </div>
+
+            <!-- Mode 1: Income-Based Form -->
+            <form name="calform" onsubmit="calculateAffordability(); return false;">
+              <table id="calinputtable" class="panel">
+                <tr>
+                  <td>Annual household income
+                    <img class="ttimg" width="16" height="16" alt="?" src="img/svg/help.svg"
+                      title="The entire before-tax income of the household, including salary, tips, commissions, bonuses, investment income, dividends, alimony received, and more." />
+                  </td>
+                  <td align="right">
+                    <span class="input-unit-wrapper">
+                      <span class="unit-prefix">$</span>
+                      <input type="text" name="cannualincome" id="cannualincome" value="120,000" class="inlong indollar" />
+                    </span>
+                  </td>
+                  <td>salary + other incomes (before tax)</td>
+                </tr>
+                <tr>
+                  <td>Mortgage loan term</td>
+                  <td align="right"><input type="text" name="cloanterm" id="cloanterm" value="30" class="inlong" /></td>
+                  <td>years</td>
+                </tr>
+                <tr>
+                  <td>Interest rate</td>
+                  <td align="right">
+                    <span class="input-unit-wrapper">
+                      <input type="text" name="cinterestrate" id="cinterestrate" value="6.486" class="inlong inpct" />
+                      <span class="unit-suffix">%</span>
+                    </span>
+                  </td>
+                  <td>&nbsp;</td>
+                </tr>
+                <tr>
+                  <td>Monthly debt payback
+                    <img class="ttimg" width="16" height="16" alt="?" src="img/svg/help.svg"
+                      title="The total of the minimum amounts you pay each month to keep up with ongoing debts, such as student loans, car loans, credit cards, child support, alimony paid, and personal loans." />
+                  </td>
+                  <td align="right">
+                    <span class="input-unit-wrapper">
+                      <span class="unit-prefix">$</span>
+                      <input type="text" name="cmonthlydebt" id="cmonthlydebt" value="0" class="inlong indollar" />
+                    </span>
+                  </td>
+                  <td>long-term debts, car, student loan, etc</td>
+                </tr>
+                <tr>
+                  <td>Down payment</td>
+                  <td align="right">
+                    <span class="input-unit-wrapper">
+                      <span class="unit-prefix" style="display:none;">$</span>
+                      <input type="text" name="cdownpercent" id="cdownpercent" value="20" class="inlong inpct" />
+                      <span class="unit-suffix">%</span>
+                    </span>
+                  </td>
+                  <td>
+                    <select name="cdownpaymentunit" onchange="cunitchange('cdownpercent', this.value);">
+                      <option value="p" selected>%</option>
+                      <option value="d">$</option>
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Property tax</td>
+                  <td align="right">
+                    <span class="input-unit-wrapper">
+                      <span class="unit-prefix" style="display:none;">$</span>
+                      <input type="text" name="cpropertytax" id="cpropertytax" value="1.5" class="inlong inpct" />
+                      <span class="unit-suffix">%</span>
+                    </span>
+                  </td>
+                  <td>
+                    <select name="cpropertytaxunit" onchange="cunitchange('cpropertytax', this.value);">
+                      <option value="p" selected>%</option>
+                      <option value="d">$</option>
+                    </select> per year
+                  </td>
+                </tr>
+                <tr>
+                  <td>HOA or co-op fee</td>
+                  <td align="right">
+                    <span class="input-unit-wrapper">
+                      <span class="unit-prefix" style="display:none;">$</span>
+                      <input type="text" name="choa" id="choa" value="3" class="inlong inpct" />
+                      <span class="unit-suffix">%</span>
+                    </span>
+                  </td>
+                  <td>
+                    <select name="choaunit" onchange="cunitchange('choa', this.value);">
+                      <option value="p" selected>%</option>
+                      <option value="d">$</option>
+                    </select> per year
+                  </td>
+                </tr>
+                <tr>
+                  <td>Insurance</td>
+                  <td align="right">
+                    <span class="input-unit-wrapper">
+                      <span class="unit-prefix" style="display:none;">$</span>
+                      <input type="text" name="cinsurance" id="cinsurance" value="0.5" class="inlong inpct" />
+                      <span class="unit-suffix">%</span>
+                    </span>
+                  </td>
+                  <td>
+                    <select name="cinsuranceunit" onchange="cunitchange('cinsurance', this.value);">
+                      <option value="p" selected>%</option>
+                      <option value="d">$</option>
+                    </select> per year
+                  </td>
+                </tr>
+                <tr>
+                  <td>Debt-to-income (DTI) ratio</td>
+                  <td colspan="2">
+                    <select name="cdtiunit" id="cdtiunit">
+                      <option value="cv" selected>Conventional loan (28/36 rule)</option>
+                      <option value="fha">FHA loan (31% front-end, 43% back-end)</option>
+                      <option value="va">VA loan (41%)</option>
+                      <option value="10">10%</option>
+                      <option value="15">15%</option>
+                      <option value="20">20%</option>
+                      <option value="25">25%</option>
+                      <option value="30">30%</option>
+                      <option value="35">35%</option>
+                      <option value="40">40%</option>
+                      <option value="45">45%</option>
+                      <option value="50">50%</option>
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="3" align="center" style="padding-top:8px;">
+                    <input type="submit" value="Calculate" />
+                    <input type="button" value="Clear" onclick="clearForm1()" />
+                  </td>
+                </tr>
+              </table>
+            </form>
+
+            <!-- Latest Mortgage Rates widget -->
+            <div style="padding:10px 0px;text-align:center;">
+              <table align="center">
+                <tr>
+                  <td>
+                    <div style="border:1px solid #bbb;padding:5px;margin:3px;">
+                      <b>Latest Mortgage Rates:</b><br />
+                      30 Years: <a href="#" onclick="return setYearRate('6.486', '30');">6.486%</a> &nbsp;
+                      15 Years: <a href="#" onclick="return setYearRate('5.687', '15');">5.687%</a> &nbsp;
+                      10 Years: <a href="#" onclick="return setYearRate('5.581', '10');">5.581%</a>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </div>
+
+            <!-- Mode 2: Budget-Based -->
+            <a name="budget-based"></a>
+            <br />
+            <h2 style="margin-top:24px;">House affordability based on fixed, monthly budgets</h2>
+            <p>This is a separate calculator used to estimate house affordability based on monthly allocations of a fixed amount for housing costs.</p>
+
+            <!-- Mode 2 results -->
+            <div id="results-container2">
+              <h2 class="h2result">
+                You can afford a house up to <span id="affordable-house-price2">$0</span>
+              </h2>
+              <p id="affordability-summary2" style="padding:6px 0px;font-size:14px;"></p>
+              <table class="cinfoT">
+                <tr><td><b>Total price of the house</b></td><td align="right"><b><span id="result-house-price2">$0.00</span></b></td></tr>
+                <tr><td>Loan amount</td><td align="right"><span id="result-loan-amount2">$0.00</span></td></tr>
+                <tr><td>Down payment</td><td align="right"><span id="result-down-payment2">$0.00</span></td></tr>
+                <tr><td>Estimated closing cost (one time, assume 3%)</td><td align="right"><span id="result-closing-cost2">$0.00</span></td></tr>
+                <tr><td><b>Total one-time payment at closing</b></td><td align="right"><b><span id="result-total-closing2">$0.00</span></b></td></tr>
+                <tr><td colspan="2">&nbsp;</td></tr>
+                <tr><td>Monthly mortgage payment</td><td align="right"><span id="result-monthly-mortgage2">$0.00</span></td></tr>
+                <tr><td>Monthly property tax</td><td align="right"><span id="result-monthly-tax2">$0.00</span></td></tr>
+                <tr><td>Monthly HOA or co-op fee</td><td align="right"><span id="result-monthly-hoa2">$0.00</span></td></tr>
+                <tr><td>Monthly insurance cost</td><td align="right"><span id="result-monthly-insurance2">$0.00</span></td></tr>
+                <tr><td>Monthly maintenance cost</td><td align="right"><span id="result-monthly-maintenance2">$0.00</span></td></tr>
+                <tr><td><b>Total monthly cost on the house</b></td><td align="right"><b><span id="result-total-monthly2">$0.00</span></b></td></tr>
+              </table>
+            </div>
+
+            <form name="calform2" onsubmit="calculateAffordabilityFromBudget(); return false;">
+              <table id="calinputtable2" class="panel">
+                <tr>
+                  <td>Budget for house
+                    <img class="ttimg" width="16" height="16" alt="?" src="img/svg/help.svg"
+                      title="The amount of money you can afford and are willing to pay for the house each month." />
+                  </td>
+                  <td align="right">
+                    <span class="input-unit-wrapper">
+                      <span class="unit-prefix">$</span>
+                      <input type="text" name="c2budget" id="c2budget" value="3,500" class="inlong indollar" />
+                    </span>
+                  </td>
+                  <td>per month</td>
+                </tr>
+                <tr>
+                  <td>Mortgage loan term</td>
+                  <td align="right"><input type="text" name="c2loanterm" id="c2loanterm" value="30" class="inlong" /></td>
+                  <td>years</td>
+                </tr>
+                <tr>
+                  <td>Interest rate</td>
+                  <td align="right">
+                    <span class="input-unit-wrapper">
+                      <input type="text" name="c2interestrate" id="c2interestrate" value="6.486" class="inlong inpct" />
+                      <span class="unit-suffix">%</span>
+                    </span>
+                  </td>
+                  <td>&nbsp;</td>
+                </tr>
+                <tr>
+                  <td>Down payment</td>
+                  <td align="right">
+                    <span class="input-unit-wrapper">
+                      <span class="unit-prefix" style="display:none;">$</span>
+                      <input type="text" name="c2downpercent" id="c2downpercent" value="20" class="inlong inpct" />
+                      <span class="unit-suffix">%</span>
+                    </span>
+                  </td>
+                  <td>
+                    <select name="c2downpaymentunit" onchange="cunitchange('c2downpercent', this.value);">
+                      <option value="p" selected>%</option>
+                      <option value="d">$</option>
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="3" style="padding:10px 0px 3px 0px;">
+                    <label for="c2coverfees" class="cbcontainer">
+                      <input type="checkbox" name="c2coverfees" id="c2coverfees" value="1" checked onchange="showhideFee();" />
+                      Include the tax and fees below into the budget
+                    </label>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="3">
+                    <table id="c2taxfees" style="padding-left:21px;">
+                      <tr>
+                        <td>Property tax</td>
+                        <td align="right">
+                          <span class="input-unit-wrapper">
+                            <span class="unit-prefix" style="display:none;">$</span>
+                            <input type="text" name="c2propertytax" id="c2propertytax" value="1.5" class="innormal inpct" />
+                            <span class="unit-suffix">%</span>
+                          </span>
+                        </td>
+                        <td>
+                          <select name="c2propertytaxunit" onchange="cunitchange('c2propertytax', this.value);">
+                            <option value="p" selected>%</option>
+                            <option value="d">$</option>
+                          </select> per year
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>HOA or co-op fee</td>
+                        <td align="right">
+                          <span class="input-unit-wrapper">
+                            <span class="unit-prefix" style="display:none;">$</span>
+                            <input type="text" name="c2hoa" id="c2hoa" value="0" class="innormal inpct" />
+                            <span class="unit-suffix">%</span>
+                          </span>
+                        </td>
+                        <td>
+                          <select name="c2hoaunit" onchange="cunitchange('c2hoa', this.value);">
+                            <option value="p" selected>%</option>
+                            <option value="d">$</option>
+                          </select> per year
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Insurance</td>
+                        <td align="right">
+                          <span class="input-unit-wrapper">
+                            <span class="unit-prefix" style="display:none;">$</span>
+                            <input type="text" name="c2insurance" id="c2insurance" value="0.5" class="innormal inpct" />
+                            <span class="unit-suffix">%</span>
+                          </span>
+                        </td>
+                        <td>
+                          <select name="c2insuranceunit" onchange="cunitchange('c2insurance', this.value);">
+                            <option value="p" selected>%</option>
+                            <option value="d">$</option>
+                          </select> per year
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Maintenance cost<br />(repair, utility etc.)</td>
+                        <td align="right">
+                          <span class="input-unit-wrapper">
+                            <span class="unit-prefix" style="display:none;">$</span>
+                            <input type="text" name="c2maintenance" id="c2maintenance" value="1.5" class="innormal inpct" />
+                            <span class="unit-suffix">%</span>
+                          </span>
+                        </td>
+                        <td>
+                          <select name="c2maintenanceunit" onchange="cunitchange('c2maintenance', this.value);">
+                            <option value="p" selected>%</option>
+                            <option value="d">$</option>
+                          </select> per year
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="3" align="center" style="padding-top:8px;">
+                    <input type="submit" value="Calculate" />
+                    <input type="button" value="Clear" onclick="clearForm2()" />
+                  </td>
+                </tr>
+              </table>
+            </form>
+
+            <fieldset style="margin-top:20px;padding:10px;border:1px solid #ccc;font-size:14px;">
+              <legend>Related</legend>
+              <a href="mortgage-calculator.html">Mortgage Calculator</a> |
+              <a href="mortgage-payoff-calculator.html">Mortgage Payoff Calculator</a> |
+              <a href="amortization-calculator.html">Amortization Calculator</a>
+            </fieldset>
+
+            <!-- Educational content -->
+            <div class="educational-content">
+              <h2>Understanding House Affordability</h2>
+              <p>In the U.S., conventional, FHA, and other mortgage lenders like to use two ratios, called the front-end and back-end ratios, to determine how much money they are willing to loan. They are basic debt-to-income ratios (DTI), albeit slightly different and explained below. For more information about or to do calculations involving debt-to-income ratios, please visit the <a href="debt-ratio-calculator.html">Debt-to-Income (DTI) Ratio Calculator</a>.</p>
+              <p>Because they are used by lenders to assess the risk of lending to each home-buyer, home-buyers can strive to lower their DTI in order to not only be able to qualify for a mortgage, but for a favorable one. The lower the DTI, the more likely a home-buyer is to get a good deal.</p>
+
+              <h3>Front-End Ratio</h3>
+              <p>The front-end debt ratio is also known as the mortgage-to-income ratio and is computed by dividing total monthly housing costs by monthly gross income.</p>
+              <table align="center">
+                <tr>
+                  <td>Front-end debt ratio</td>
+                  <td>=</td>
+                  <td>
+                    <table cellpadding="0">
+                      <tr><td align="center">monthly housing costs</td></tr>
+                      <tr><td bgcolor="#000000" height="1"></td></tr>
+                      <tr><td align="center">monthly gross income</td></tr>
+                    </table>
+                  </td>
+                  <td nowrap="">&times; 100%</td>
+                </tr>
+              </table>
+              <p>For our calculator, only conventional and FHA loans utilize the front-end debt ratio. The monthly housing costs not only include interest and principal of the loan, but other costs associated with housing like insurance, property taxes, and HOA/Co-Op Fee.</p>
+
+              <h3>Back-End Ratio</h3>
+              <p>The back-end debt ratio includes everything in the front-end ratio dealing with housing costs, along with any accrued recurring monthly debt like car loans, student loans, and credit cards.</p>
+              <table align="center">
+                <tr>
+                  <td>Back-end debt ratio</td>
+                  <td>=</td>
+                  <td>
+                    <table cellpadding="0">
+                      <tr><td align="center">monthly housing costs + all other recurring monthly debt</td></tr>
+                      <tr><td bgcolor="#000000" height="1"></td></tr>
+                      <tr><td align="center">monthly gross income</td></tr>
+                    </table>
+                  </td>
+                  <td nowrap="">&times; 100%</td>
+                </tr>
+              </table>
+              <p>This ratio is known as the debt-to-income ratio and is used for all the calculations of this calculator.</p>
+
+              <h3>Conventional Loans and the 28/36 Rule</h3>
+              <p>In the U.S., a conventional loan is a mortgage that is not insured by the federal government directly and generally refers to a mortgage loan that follows the guidelines of government-sponsored enterprises (GSE's) like Fannie Mae or Freddie Mac. Conventional loans may be either conforming or non-conforming. Conforming loans are bought by housing agencies such as Freddie Mac and Fannie Mae and follow their terms and conditions. Non-conforming loans are any loans not bought by these housing agencies that do not follow the terms and conditions laid out by these agencies, but are generally still considered conventional loans.</p>
+              <p>The 28/36 Rule is a commonly accepted guideline used in the U.S. and Canada to determine each household's risk for conventional loans. It states that a household should spend no more than 28% of its gross monthly income on the front-end debt and no more than 36% of its gross monthly income on the back-end debt. The 28/36 Rule is a qualification requirement for conforming conventional loans.</p>
+              <p>While it has been adopted as one of the most widely-used methods of determining the risk associated with a borrower, the 28/36 Rule is often dismissed by lenders under heavy stress in competitive lending markets. Because it is so leniently enforced, certain lenders can sometimes lend to risky borrowers who may not actually qualify based on the 28/36 Rule.</p>
+
+              <h3>FHA Loans</h3>
+              <p>Please visit our <a href="fha-loan-calculator.html">FHA Loan Calculator</a> to get more in-depth information regarding FHA loans, or to calculate estimated monthly payments on FHA loans.</p>
+              <p>An FHA loan is a mortgage insured by the Federal Housing Administration. Borrowers must pay for mortgage insurance in order to protect lenders from losses in instances of defaults on loans. The insurance allows lenders to offer FHA loans at lower interest rates than usual with more flexible requirements, such as lower down payment as a percentage of the purchase price.</p>
+              <p>To be approved for FHA loans, the ratio of front-end to back-end ratio of applicants needs to be better than 31/43. In other words, monthly housing costs should not exceed 31%, and all secured and non-secured monthly recurring debts should not exceed 43% of monthly gross income. FHA loans also require 1.75% upfront premiums.</p>
+              <p>FHA loans have more lax debt-to-income controls than conventional loans; they allow borrowers to have 3% more front-end debt and 7% more back-end debt. The reason that FHA loans can be offered to riskier clients is the required upfront payment of mortgage insurance premiums.</p>
+
+              <h3>VA Loans</h3>
+              <p>Please visit our <a href="va-mortgage-calculator.html">VA Mortgage Calculator</a> to get more in-depth information regarding VA loans, or to calculate estimated monthly payments on VA mortgages.</p>
+              <p>A VA loan is a mortgage loan granted to veterans, service members on active duty, members of the national guard, reservists, or surviving spouses, and is guaranteed by the U.S. Department of Veterans Affairs (VA).</p>
+              <p>To be approved for a VA loan, the back-end ratio of the applicant needs to be better than 41%. In other words, the sum of monthly housing costs and all recurring secured and non-secured debts should not exceed 41% of gross monthly income. VA loans generally do not consider front-end ratios of applicants but require funding fees.</p>
+
+              <h3>Custom Debt-to-Income Ratios</h3>
+              <p>The calculator also allows the user to select from debt-to-income ratios between 10% to 50% in increments of 5%. If coupled with down payments less than 20%, keep in mind that conventional loans typically require PMI insurance. There are no options above 50% because that is the point at which DTI exceeds risk thresholds for nearly all mortgage lenders.</p>
+              <p>In general, home-buyers should use lower percentages for more conservative estimates and higher percentages for more risky estimates. A 20% DTI is easier to pay off during stressful financial periods compared to, say, a 45% DTI. Home-buyers who are unsure of which option to use can try the Conventional Loan option, which uses the 28/36 Rule.</p>
+
+              <h3>Steps to Improve House Affordability</h3>
+              <p>If you cannot immediately afford the house you want, below are some steps that can be taken to increase house affordability, albeit with time and due diligence.</p>
+              <ul>
+                <li><b>Reduce debt in other areas</b>—This may include anything from choosing a less expensive car to paying off student loans. In essence, lowering the standard of living in other areas can make it more possible to afford a particularly sought-after house.</li>
+                <li><b>Increase credit score</b>—A better credit score can help buyers find a loan with a better interest rate. A lower interest rate helps the buyer's purchasing power.</li>
+                <li><b>Bigger down payment</b>—Paying more upfront accomplishes two things. One, it directly increases the amount the buyer can afford. Two, a big down payment helps the buyer find a better interest rate and therefore increases the buyer's purchasing power.</li>
+                <li><b>Save more</b>—When desired DTI ratios are not met, mortgage lenders may look at the amount of savings of each borrower as a compensating factor.</li>
+                <li><b>Higher income</b>—Although increasing income is easier said than done, it can culminate in the most drastic change in a borrower's ability to purchase a certain home. A large increase in salary immediately has a large impact on DTI ratios. Acquiring a higher income usually involves different combinations of achieving higher education, improving skills, networking, constant job searching, and typically lots of hard work.</li>
+              </ul>
+              <p>Working towards achieving one or more of these will increase a household's success rate in qualifying for the purchase of a home in accordance with lenders' standards of qualifications. If these prove to be difficult, home-buyers can maybe consider less expensive homes. Some people find better luck moving to different cities. If not, there are various housing assistance programs at the local level, though these are geared more towards low-income households. Renting is a viable alternative to owning a home, and it may be helpful to rent for the time being in order to set up a better buying situation in the future.</p>
+            </div>
+          </section>
+
+          <!-- Sidebar (same as mortgage-calculator.html) -->
+          <aside class="sidebar" aria-label="Sidebar">
+            <div class="ad-slot" role="region" aria-label="Advertisement">
+              <span>Ad slot — 300&times;250</span>
+            </div>
+            <div class="sidebar-search" role="search">
+              <div class="sidebar-search-row">
+                <label for="sidebar-search-input" class="sr-only">Search financial calculators</label>
+                <input type="search" id="sidebar-search-input" placeholder="Search calculators..." aria-label="Search financial calculators" autocomplete="off" />
+                <button type="button" id="sidebar-search-btn" class="sidebar-search-btn" aria-label="Search">Search</button>
+              </div>
+              <div id="sidebar-search-results" class="sidebar-search-results" role="listbox" aria-label="Search results"></div>
+            </div>
+            <div class="othercalc-block" id="othercalc">
+              <div class="othercalc-title"><span>Popular Financial Calculator</span></div>
+              <div class="othercalc-links">
+                <a href="mortgage-calculator.html">Mortgage</a><a href="loan-calculator.html">Loan</a><a href="auto-loan-calculator.html">Auto Loan</a>
+                <a href="interest-calculator.html">Interest</a><a href="payment-calculator.html">Payment</a><a href="retirement-calculator.html">Retirement</a>
+                <a href="amortization-calculator.html">Amortization</a><a href="investment-calculator.html">Investment</a><a href="currency-calculator.html">Currency</a>
+                <a href="inflation-calculator.html">Inflation</a><a href="finance-calculator.html">Finance</a><a href="mortgage-payoff-calculator.html">Mortgage Payoff</a>
+                <a href="income-tax-calculator.html">Income Tax</a><a href="compound-interest-calculator.html">Compound Interest</a><a href="salary-calculator.html">Salary</a>
+                <a href="401k-calculator.html">401K</a><a href="interest-rate-calculator.html">Interest Rate</a><a href="sales-tax-calculator.html">Sales Tax</a>
+                <a href="financial-calculator.html">More Financial Calculators</a>
+              </div>
+              <div class="othercalc-categories">
+                <a href="financial-calculator.html" class="active">Financial</a><span class="separator">|</span>
+                <a href="fitness-calculator.html">Fitness & Health</a><span class="separator">|</span>
+                <a href="math-calculator.html">Math</a><span class="separator">|</span>
+                <a href="other-calculator.html">Others</a>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer id="site-footer" class="category-page-footer">
+      <div class="footer-row">
+        <nav class="footer-links" aria-label="Footer navigation">
+          <a href="about.html">About Us</a><a href="contact.html">Contact Us</a><a href="faq.html">FAQ</a>
+          <a href="sitemap.xml">Sitemap</a><a href="terms.html">Terms of Use</a><a href="privacy.html">Privacy Policy</a>
+        </nav>
+        <span class="footer-copyright">&copy; 2026 Calcify.ai.</span>
+      </div>
+    </footer>
+
+    <script src="js/search.js"></script>
+    <script src="js/house-affordability-calculator.js"></script>
+    <script>
+      initHouseAffordabilityCalculator();
+
+      var payoffSearchInput = document.getElementById('sidebar-search-input');
+      var payoffSearchResults = document.getElementById('sidebar-search-results');
+      if (payoffSearchInput && payoffSearchResults && typeof initHeaderSearch === 'function') {
+        initHeaderSearch(payoffSearchInput, payoffSearchResults, getCalculators());
+      }
+    </script>
+  </body>
+</html>

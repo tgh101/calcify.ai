@@ -20,6 +20,7 @@ const CALCULATORS = [
   { name: 'Credit Card Payoff Calculator', url: '/credit-card-payoff-calculator.html', category: 'Financial', keywords: ['credit', 'card', 'debt', 'payoff', 'balance'] },
   { name: 'Debt-to-Income Ratio Calculator', url: '/debt-to-income-calculator.html', category: 'Financial', keywords: ['debt', 'income', 'ratio', 'dti', 'afford'] },
   { name: 'Amortization Calculator', url: '/amortization-calculator.html', category: 'Financial', keywords: ['amortization', 'schedule', 'payment', 'loan'] },
+  { name: 'House Affordability Calculator', url: '/house-affordability-calculator.html', category: 'Financial', keywords: ['affordability', 'house', 'home', 'budget', 'dti', 'income'] },
 
   /* ── Fitness & Health ──────────────────────────────────────────── */
   { name: 'BMI Calculator', url: '/bmi-calculator.html', category: 'Fitness', keywords: ['bmi', 'body', 'mass', 'index', 'weight', 'height'] },
