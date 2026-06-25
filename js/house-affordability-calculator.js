@@ -580,6 +580,12 @@ function calculateAffordability() {
     : '—';
   const dtiBackDisplay = Math.round(dtiInfo.back * 100) + '%';
 
+  // ── Hide other calculator's results ──
+  const otherResults = el('results-container2');
+  if (otherResults) {
+    otherResults.style.display = 'none';
+  }
+
   // ── DOM updates ──
   const resultsContainer = el('results-container');
   if (resultsContainer) {
@@ -699,6 +705,14 @@ function calculateAffordabilityFromBudget() {
     (el('c2maintenance') ? el('c2maintenance').value : '1.5').replace(/,/g, '')
   );
 
+  // If fees are unchecked, zero out all fee percentages
+  if (!coverFees) {
+    taxPct = 0;
+    hoaPct = 0;
+    insPct = 0;
+    maintPct = 0;
+  }
+
   // Defaults
   if (isNaN(budget) || budget <= 0) {
     budget = 3500;
@@ -731,6 +745,12 @@ function calculateAffordabilityFromBudget() {
     budget, annualRate, loanTerm, downPct,
     coverFees, taxPct, hoaPct, insPct, maintPct
   );
+
+  // ── Hide other calculator's results ──
+  const otherResults = el('results-container');
+  if (otherResults) {
+    otherResults.style.display = 'none';
+  }
 
   // ── DOM updates (mode 2) ──
   const resultsContainer2 = el('results-container2');
@@ -885,11 +905,7 @@ function initHouseAffordabilityCalculator() {
     proComma2(id);
   });
 
-  // Initialize unit symbols
-  cunitchange('cdownpercent', 'p');
-  cunitchange('cpropertytax', 'p');
-  cunitchange('choa', 'p');
-  cunitchange('cinsurance', 'p');
+  // Initialize unit symbols for mode 2 only (mode 1 uses default html values)
   cunitchange('c2downpercent', 'p');
   cunitchange('c2propertytax', 'p');
   cunitchange('c2hoa', 'p');
